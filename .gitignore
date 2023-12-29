@@ -1,0 +1,33 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.DS_Store
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+/trans4j-context/target/
+/trans4j-core/target/
+/trans4j-ext-mybatis/target/
+/trans4j-ext-rest-api/target/
+/trans4j-spring-boot-starter/target/
+/trans4j-spring-mvc/target/

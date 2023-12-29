@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.gomyck.trans4j.Trans4JConfiguration
