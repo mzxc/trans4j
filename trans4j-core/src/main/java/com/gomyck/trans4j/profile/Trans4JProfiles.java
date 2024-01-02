@@ -17,9 +17,6 @@
 package com.gomyck.trans4j.profile;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.List;
 
 /**
  * 数据转换服务配置
@@ -32,7 +29,6 @@ import java.util.List;
  * @version [1.0.0]
  * @since 2023/12/28
  */
-@ConfigurationProperties(Trans4JProfiles.CONVERTER_PREFIX)
 @Data
 public class Trans4JProfiles {
 
@@ -53,77 +49,9 @@ public class Trans4JProfiles {
    */
   private DicConfig dic = new DicConfig();
 
+  /**
+   * 加密机配置
+   */
   private SecureConfig secure = new SecureConfig();
-
-  @Data
-  public static class SecureConfig {
-    private String key;
-  }
-
-  @Data
-  public static class DicConfig {
-    /**
-     * 是否激活 dic 翻译
-     */
-    private boolean enabled = true;
-    /**
-     * dic 适配器
-     */
-    private CkDicAdaptorConfig adaptor = new CkDicAdaptorConfig();
-    /**
-     * dic job 配置
-     */
-    private CkDicJobConfig job = new CkDicJobConfig();
-  }
-
-  @ConfigurationProperties(Trans4JProfiles.CONVERTER_PREFIX + ".dic.adaptor")
-  @Data
-  public static class CkDicAdaptorConfig {
-    /**
-     * 默认的字典文件名称
-     */
-    public static final String DEFAULT_DIC_INFO_FILE_NAME = "dic.json";
-    /**
-     * 字典表的code对应的字段名
-     */
-    private String code = "key";
-    /**
-     * 字典表的value对应的字段名
-     */
-    private String value = "value";
-    /**
-     * 对应业务表的字段名称 exp: key=1 value=中国 columnName=country 这个country就是业务表存储国家的字段
-     */
-    private String columnName = "columnName";
-    /**
-     * 国际化标识字段名称
-     */
-    private String i18n;
-    /**
-     * 默认的国际化标识 默认使用的标识代码: 比如 CN
-     */
-    private String defaultI18nFlag;
-    /**
-     * 初始化字典表信息sql
-     */
-    private List<String> initDicSql;
-    /**
-     * 初始化字典表信息 URI (get 请求)
-     */
-    private List<String> initDicUrl;
-    /**
-     * 初始化字典表信息文件, 在 classPath 下可以查询到
-     */
-    private String initDicFile = DEFAULT_DIC_INFO_FILE_NAME;
-  }
-
-  @ConfigurationProperties(Trans4JProfiles.CONVERTER_PREFIX + ".dic.job")
-  @Data
-  public static class CkDicJobConfig {
-    /**
-     * 刷新字典表时间 默认 10 分钟
-     */
-    private Integer refreshInterval = 10;
-  }
 
 }

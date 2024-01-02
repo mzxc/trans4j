@@ -16,16 +16,24 @@
 
 package com.gomyck.trans4j;
 
-import com.gomyck.trans4j.profile.Trans4JProfiles;
+import com.gomyck.trans4j.converter.mvc.ResponseBodyAdviceConverter;
+import com.gomyck.trans4j.selector.MyBatisExtImportSelector;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.*;
 
 import javax.sql.DataSource;
 
 @Configuration
 @AutoConfigureAfter(DataSource.class)
-@ComponentScan({"com.gomyck.trans4j"})
-@Import({Trans4JProfiles.class})
-public class Trans4JConfiguration {}
+@ComponentScan(basePackages = {"com.gomyck.trans4j"}, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ResponseBodyAdviceConverter.class)})
+@Import({MyBatisExtImportSelector.class})
+public class Trans4JConfiguration {
+
+  @Bean
+  @ConditionalOnProperty(value = ResponseBodyAdviceConverter.RESPONSE_ADVICE_CONFIG_VALUE, havingValue = "true", matchIfMissing = true)
+  public ResponseBodyAdviceConverter initResponseBodyAdviceConverter() {
+    return new ResponseBodyAdviceConverter();
+  }
+
+}

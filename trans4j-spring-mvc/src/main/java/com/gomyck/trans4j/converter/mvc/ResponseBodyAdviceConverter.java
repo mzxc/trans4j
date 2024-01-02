@@ -26,7 +26,6 @@ import com.gomyck.util.log.logger.CkLogger;
 import com.gomyck.util.serialize.CKJSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
@@ -53,8 +52,9 @@ import java.util.Objects;
  */
 @Slf4j
 @ControllerAdvice
-@ConditionalOnProperty(value = Trans4JProfiles.CONVERTER_PREFIX + ".message-advice", havingValue = "true", matchIfMissing = true)
 public class ResponseBodyAdviceConverter implements Converter, ResponseBodyAdvice<Object> {
+
+  public static final String RESPONSE_ADVICE_CONFIG_VALUE = Trans4JProfiles.CONVERTER_PREFIX + ".message-advice";
 
   /**
    * 处理器集合

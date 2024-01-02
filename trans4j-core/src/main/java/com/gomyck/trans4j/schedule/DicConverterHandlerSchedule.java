@@ -18,13 +18,9 @@ package com.gomyck.trans4j.schedule;
 
 import com.gomyck.trans4j.handler.dictionary.DicConverterHandler;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
@@ -39,12 +35,8 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
  * @version [1.0.0]
  * @since 2022/12/12
  */
-@Configuration
-@EnableScheduling
-@ConditionalOnProperty(value = Trans4JProfiles.CONVERTER_PREFIX + ".dic.enabled", havingValue = "true", matchIfMissing = true)
+@Slf4j
 public class DicConverterHandlerSchedule implements SchedulingConfigurer {
-
-  Logger log = LoggerFactory.getLogger(DicConverterHandlerSchedule.class);
 
   @Autowired
   Trans4JProfiles trans4jProfiles;

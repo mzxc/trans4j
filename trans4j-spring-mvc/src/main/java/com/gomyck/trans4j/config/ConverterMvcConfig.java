@@ -18,8 +18,6 @@
 package com.gomyck.trans4j.config;
 
 import com.gomyck.trans4j.exception.RuntimeExceptionResolver;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -36,7 +34,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @since 2021/6/16
  */
 @Component
-@ConditionalOnBean(WebMvcAutoConfiguration.class)
 public class ConverterMvcConfig implements WebMvcConfigurer {
 
   @Override

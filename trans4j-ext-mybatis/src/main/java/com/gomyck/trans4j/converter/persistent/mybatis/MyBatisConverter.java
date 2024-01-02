@@ -22,8 +22,6 @@ import com.gomyck.trans4j.converter.persistent.ResultCollectionConverter;
 import com.gomyck.trans4j.support.TransBus;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.*;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.stereotype.Component;
 
 import java.sql.Statement;
 import java.util.List;
@@ -37,8 +35,6 @@ import java.util.Properties;
  * @version [版本号/1.0]
  * @since [2019-07-17]
  */
-@Component
-@ConditionalOnClass(ResultSetHandler.class)
 @Intercepts({@Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})})
 public class MyBatisConverter extends ResultCollectionConverter implements Interceptor, Converter {
 

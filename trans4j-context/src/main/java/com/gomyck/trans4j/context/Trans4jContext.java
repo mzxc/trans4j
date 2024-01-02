@@ -19,11 +19,13 @@ package com.gomyck.trans4j.context;
 import com.gomyck.trans4j.filter.FilterComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerFactory;
+import com.gomyck.trans4j.handler.dictionary.DicConverterInitConditional;
 import com.gomyck.trans4j.handler.dictionary.DicInfoConverterHandlerFactory;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
+import com.gomyck.trans4j.schedule.DicConverterHandlerSchedule;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.Nullable;
@@ -41,8 +43,8 @@ public class Trans4jContext {
 
   @Bean
   @Order(Integer.MIN_VALUE)
-  public FilterComposite initFilterComposite() {
-    return new FilterComposite();
+  public FilterComposite<?, ?> initFilterComposite() {
+    return new FilterComposite<>();
   }
 
   @Bean
@@ -52,13 +54,19 @@ public class Trans4jContext {
   }
 
   @Bean
-  @ConditionalOnProperty(value = Trans4JProfiles.CONVERTER_PREFIX + ".dic.enabled", havingValue = "true", matchIfMissing = true)
+  @Conditional(DicConverterInitConditional.class)
   public ConverterHandlerFactory initDicConverterHandlerFactory() {
     DicInfoConverterHandlerFactory dicInfoConverterHandlerFactory = new DicInfoConverterHandlerFactory();
     dicInfoConverterHandlerFactory.setTrans4jProfiles(trans4jProfiles);
     dicInfoConverterHandlerFactory.setDataSource(dataSource);
     dicInfoConverterHandlerFactory.setConverterHandlerComposite(initHandlerComposite());
     return dicInfoConverterHandlerFactory;
+  }
+
+  @Bean
+  @Conditional(DicConverterInitConditional.class)
+  public DicConverterHandlerSchedule initDicConverterHandlerSchedule() {
+    return new DicConverterHandlerSchedule();
   }
 
 }

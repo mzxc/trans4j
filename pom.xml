@@ -19,6 +19,41 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.gomyck</groupId>
+        <artifactId>trans4j-context</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.gomyck</groupId>
+        <artifactId>trans4j-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.gomyck</groupId>
+        <artifactId>trans4j-ext-mybatis</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.gomyck</groupId>
+        <artifactId>trans4j-ext-rest-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.gomyck</groupId>
+        <artifactId>trans4j-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.gomyck</groupId>
+        <artifactId>trans4j-spring-mvc</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <modules>
     <module>trans4j-spring-boot-starter</module>
     <module>trans4j-core</module>
