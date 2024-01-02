@@ -17,12 +17,16 @@
 package com.gomyck.trans4j.schedule;
 
 import com.gomyck.trans4j.handler.dictionary.DicConverterHandler;
+import com.gomyck.trans4j.handler.dictionary.DicConverterInitConditional;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.stereotype.Component;
 
 /**
  * 字典翻译定时任务
@@ -36,6 +40,9 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
  * @since 2022/12/12
  */
 @Slf4j
+@Component
+@EnableScheduling
+@Conditional(DicConverterInitConditional.class)
 public class DicConverterHandlerSchedule implements SchedulingConfigurer {
 
   @Autowired
@@ -48,8 +55,9 @@ public class DicConverterHandlerSchedule implements SchedulingConfigurer {
   @Override
   public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
     String cron = "0 */" + trans4jProfiles.getDic().getJob().getRefreshInterval() + " * * * *";
+    log.info("registry refresh dic table info task on cron: {}...", cron);
     taskRegistrar.addCronTask(() -> {
-      log.debug("refresh dic table info start.....");
+      log.debug("refresh dic table info start...");
       dicConverterHandler.getInitDicInfoFunc().forEach(func -> {
         try {
           dicConverterHandler.init(func);
@@ -57,7 +65,7 @@ public class DicConverterHandlerSchedule implements SchedulingConfigurer {
           log.error("dic schedule in error: {}", e.toString());
         }
       });
-      log.debug("refresh dic table info end.....");
+      log.debug("refresh dic table info end...");
     }, cron);
   }
 }

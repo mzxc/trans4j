@@ -21,9 +21,11 @@ import com.gomyck.trans4j.profile.SecureConfig;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
+@Configuration
 public class Trans4JCoreImportSelector implements ImportSelector {
 
   @Bean

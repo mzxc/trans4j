@@ -22,7 +22,6 @@ import com.gomyck.trans4j.handler.ConverterHandlerFactory;
 import com.gomyck.trans4j.handler.dictionary.DicConverterInitConditional;
 import com.gomyck.trans4j.handler.dictionary.DicInfoConverterHandlerFactory;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
-import com.gomyck.trans4j.schedule.DicConverterHandlerSchedule;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -61,12 +60,6 @@ public class Trans4jContext {
     dicInfoConverterHandlerFactory.setDataSource(dataSource);
     dicInfoConverterHandlerFactory.setConverterHandlerComposite(initHandlerComposite());
     return dicInfoConverterHandlerFactory;
-  }
-
-  @Bean
-  @Conditional(DicConverterInitConditional.class)
-  public DicConverterHandlerSchedule initDicConverterHandlerSchedule() {
-    return new DicConverterHandlerSchedule();
   }
 
 }
