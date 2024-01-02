@@ -16,7 +16,4 @@
 
 package com.gomyck.trans4j.handler;
 
-public class AfterHandleInfo {
-
-
-}
+public class AfterHandleInfo {}

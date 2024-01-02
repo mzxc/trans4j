@@ -19,7 +19,7 @@ package com.gomyck.trans4j.converter.mvc;
 
 import com.gomyck.trans4j.converter.Converter;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
-import com.gomyck.trans4j.profile.Trans4jProfiles;
+import com.gomyck.trans4j.profile.Trans4JProfiles;
 import com.gomyck.trans4j.support.ConvertTypeEnum;
 import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.log.logger.CkLogger;
@@ -53,7 +53,7 @@ import java.util.Objects;
  */
 @Slf4j
 @ControllerAdvice
-@ConditionalOnProperty(value = Trans4jProfiles.CONVERTER_PREFIX + ".message-advice", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = Trans4JProfiles.CONVERTER_PREFIX + ".message-advice", havingValue = "true", matchIfMissing = true)
 public class ResponseBodyAdviceConverter implements Converter, ResponseBodyAdvice<Object> {
 
   /**

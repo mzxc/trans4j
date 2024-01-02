@@ -34,8 +34,6 @@ public enum BusEnum {
   CONVERT_FILTER,
   // 转换状态
   CONVERT_STATUS,
-  // 是否为消息增强
-  ADVICE_STATUS,
   // 翻转翻译
   CONVERT_OVERTURN_STATUS,
   // 是否携带分页

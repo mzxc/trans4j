@@ -363,14 +363,4 @@ public class DicConverterHandler extends AbstractConverterHandler {
     return convertInfo;
   }
 
-  @Override
-  public boolean beforeHandler(final Object input) {
-    return true;
-  }
-
-  @Override
-  public boolean afterHandler(final Object input) {
-    return true;
-  }
-
 }

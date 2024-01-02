@@ -18,7 +18,7 @@ package com.gomyck.trans4j.converter.persistent;
 
 import com.gomyck.trans4j.converter.Converter;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
-import com.gomyck.trans4j.profile.Trans4jProfiles;
+import com.gomyck.trans4j.profile.Trans4JProfiles;
 import com.gomyck.trans4j.support.ConvertTypeEnum;
 import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.CkPage;
@@ -52,7 +52,7 @@ public abstract class ResultCollectionConverter implements Converter {
    * 转换器配置类
    */
   @Autowired
-  Trans4jProfiles trans4jProfiles;
+  Trans4JProfiles trans4jProfiles;
 
   @Override
   public Object doConvert(Object result) {

@@ -16,7 +16,7 @@
 
 package com.gomyck.trans4j;
 
-import com.gomyck.trans4j.profile.Trans4jProfiles;
+import com.gomyck.trans4j.profile.Trans4JProfiles;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -27,5 +27,5 @@ import javax.sql.DataSource;
 @Configuration
 @AutoConfigureAfter(DataSource.class)
 @ComponentScan({"com.gomyck.trans4j"})
-@Import({Trans4jProfiles.class})
+@Import({Trans4JProfiles.class})
 public class Trans4JConfiguration {}

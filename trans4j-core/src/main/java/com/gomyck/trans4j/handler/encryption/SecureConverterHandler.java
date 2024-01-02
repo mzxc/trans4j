@@ -19,12 +19,12 @@ package com.gomyck.trans4j.handler.encryption;
 import com.gomyck.trans4j.handler.AbstractConverterHandler;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.handler.encryption.entity.SecureEntity;
-import com.gomyck.trans4j.profile.Trans4jProfiles;
+import com.gomyck.trans4j.profile.Trans4JProfiles;
 import org.springframework.beans.factory.annotation.Value;
 
 public class SecureConverterHandler extends AbstractConverterHandler {
 
-  @Value("${" + Trans4jProfiles.CONVERTER_PREFIX + ".secure.key}")
+  @Value("${" + Trans4JProfiles.CONVERTER_PREFIX + ".secure.key}")
   private String key;
 
   public SecureConverterHandler(ConverterHandlerComposite converterHandlerComposite) {

@@ -20,7 +20,7 @@ import com.gomyck.trans4j.filter.FilterComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerFactory;
 import com.gomyck.trans4j.handler.dictionary.DicInfoConverterHandlerFactory;
-import com.gomyck.trans4j.profile.Trans4jProfiles;
+import com.gomyck.trans4j.profile.Trans4JProfiles;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +34,7 @@ import javax.sql.DataSource;
 @AllArgsConstructor
 public class Trans4jContext {
 
-  private Trans4jProfiles trans4jProfiles;
+  private Trans4JProfiles trans4jProfiles;
 
   @Nullable
   private DataSource dataSource;
@@ -52,7 +52,7 @@ public class Trans4jContext {
   }
 
   @Bean
-  @ConditionalOnProperty(value = Trans4jProfiles.CONVERTER_PREFIX + ".dic.enabled", havingValue = "true", matchIfMissing = true)
+  @ConditionalOnProperty(value = Trans4JProfiles.CONVERTER_PREFIX + ".dic.enabled", havingValue = "true", matchIfMissing = true)
   public ConverterHandlerFactory initDicConverterHandlerFactory() {
     DicInfoConverterHandlerFactory dicInfoConverterHandlerFactory = new DicInfoConverterHandlerFactory();
     dicInfoConverterHandlerFactory.setTrans4jProfiles(trans4jProfiles);

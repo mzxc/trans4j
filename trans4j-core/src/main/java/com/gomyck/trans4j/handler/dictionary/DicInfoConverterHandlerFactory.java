@@ -20,7 +20,7 @@ import com.gomyck.trans4j.filter.dictionary.DicI18NFilter;
 import com.gomyck.trans4j.handler.ConverterHandler;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerFactory;
-import com.gomyck.trans4j.profile.Trans4jProfiles;
+import com.gomyck.trans4j.profile.Trans4JProfiles;
 import com.gomyck.util.CkFile;
 import com.gomyck.util.CkNetWork;
 import com.gomyck.util.ObjectJudge;
@@ -45,7 +45,7 @@ import java.util.Map;
 public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
 
   @Setter
-  private Trans4jProfiles trans4jProfiles;
+  private Trans4JProfiles trans4jProfiles;
   @Setter
   private DataSource dataSource;
   @Setter
@@ -67,7 +67,7 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
 
   @Override
   public void afterPropertiesSet() {
-    Trans4jProfiles.CkDicAdaptorConfig ckDicAdaptorConfig = trans4jProfiles.getDic().getAdaptor();
+    Trans4JProfiles.CkDicAdaptorConfig ckDicAdaptorConfig = trans4jProfiles.getDic().getAdaptor();
     final DicConverterHandler dicConverterHandler = getDicConverterHandler(ckDicAdaptorConfig);
     initHandlerByDatabase(ckDicAdaptorConfig, dicConverterHandler);
     initHandlerByRestServer(ckDicAdaptorConfig, dicConverterHandler);
@@ -76,7 +76,7 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
     this.dicConverterHandler = dicConverterHandler;
   }
 
-  private void initHandlerByFile(Trans4jProfiles.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
+  private void initHandlerByFile(Trans4JProfiles.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
     final String initDicFile = ckDicAdaptorConfig.getInitDicFile();
     dicConverterHandler.init(handler -> {
       if (!fileExist) return null;
@@ -93,7 +93,7 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
         }
       } catch (Exception e) {
         fileExist = false;
-        if (Trans4jProfiles.CkDicAdaptorConfig.DEFAULT_DIC_INFO_FILE_NAME.equals(initDicFile)) {
+        if (Trans4JProfiles.CkDicAdaptorConfig.DEFAULT_DIC_INFO_FILE_NAME.equals(initDicFile)) {
           log.warn("default dic file is not found.");
         } else {
           log.error("dicFile is not found, please check your file path.");
@@ -103,7 +103,7 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
     });
   }
 
-  private static void initHandlerByRestServer(Trans4jProfiles.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
+  private static void initHandlerByRestServer(Trans4JProfiles.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
     final List<String> initDicUrl = ckDicAdaptorConfig.getInitDicUrl();
     if (ObjectJudge.isNull(initDicUrl)) return;
     dicConverterHandler.init(handler -> {
@@ -123,7 +123,7 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
     });
   }
 
-  private void initHandlerByDatabase(Trans4jProfiles.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
+  private void initHandlerByDatabase(Trans4JProfiles.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
     final List<String> initDicSql = ckDicAdaptorConfig.getInitDicSql();
     if (ObjectJudge.isNull(initDicSql)) return;
     if (dataSource == null) throw new RuntimeException("init dic info error, please declare a datasource on your server or delete init sql array in the yaml file");
@@ -142,7 +142,7 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
     });
   }
 
-  private DicConverterHandler getDicConverterHandler(Trans4jProfiles.CkDicAdaptorConfig ckDicAdaptorConfig) {
+  private DicConverterHandler getDicConverterHandler(Trans4JProfiles.CkDicAdaptorConfig ckDicAdaptorConfig) {
     final boolean ifOpenI18N = ObjectJudge.notNull(ckDicAdaptorConfig.getI18n());
     DicDescribeAdaptor initDicAdaptor;
     if (ifOpenI18N) {

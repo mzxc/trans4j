@@ -32,9 +32,9 @@ import java.util.List;
  * @version [1.0.0]
  * @since 2023/12/28
  */
-@ConfigurationProperties(Trans4jProfiles.CONVERTER_PREFIX)
+@ConfigurationProperties(Trans4JProfiles.CONVERTER_PREFIX)
 @Data
-public class Trans4jProfiles {
+public class Trans4JProfiles {
 
   public static final String CONVERTER_PREFIX = "trans4j";
 
@@ -76,7 +76,7 @@ public class Trans4jProfiles {
     private CkDicJobConfig job = new CkDicJobConfig();
   }
 
-  @ConfigurationProperties(Trans4jProfiles.CONVERTER_PREFIX + ".dic.adaptor")
+  @ConfigurationProperties(Trans4JProfiles.CONVERTER_PREFIX + ".dic.adaptor")
   @Data
   public static class CkDicAdaptorConfig {
     /**
@@ -117,7 +117,7 @@ public class Trans4jProfiles {
     private String initDicFile = DEFAULT_DIC_INFO_FILE_NAME;
   }
 
-  @ConfigurationProperties(Trans4jProfiles.CONVERTER_PREFIX + ".dic.job")
+  @ConfigurationProperties(Trans4JProfiles.CONVERTER_PREFIX + ".dic.job")
   @Data
   public static class CkDicJobConfig {
     /**
