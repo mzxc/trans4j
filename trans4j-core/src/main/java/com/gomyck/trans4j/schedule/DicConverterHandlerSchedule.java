@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gomyck.trans4j.job;
+package com.gomyck.trans4j.schedule;
 
 import com.gomyck.trans4j.handler.dictionary.DicConverterHandler;
 import com.gomyck.trans4j.profile.Trans4jProfiles;
