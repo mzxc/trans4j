@@ -45,14 +45,14 @@ public interface ConverterHandler {
    * @param input 结果集
    * @return 如果返回 true 则继续, 返回 false 则进入下一个 handler 处理
    */
-  default boolean beforeHandler(Object input) {
-    return true;
+  default Object beforeHandler(Object input) {
+    return input;
   }
 
   void handle(Object obj);
 
-  default boolean afterHandler(Object input) {
-    return true;
+  default Object afterHandler(Object input) {
+    return input;
   }
 
   default String getHandlerName() {

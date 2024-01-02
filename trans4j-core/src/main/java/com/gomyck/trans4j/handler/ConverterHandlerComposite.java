@@ -69,9 +69,9 @@ public class ConverterHandlerComposite implements ConverterHandler {
       } else {
         if (Objects.isNull(obj)) return;
         filterComposite.beforeConvert(obj);
-        if (!handler.beforeHandler(obj)) continue;
+        if ((obj = handler.beforeHandler(obj)) == null) continue;
         handler.handle(obj);
-        if (!handler.afterHandler(obj)) continue;
+        if ((obj = handler.afterHandler(obj))  == null) continue;
         filterComposite.afterConvert(obj);
       }
     }

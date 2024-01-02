@@ -20,6 +20,7 @@ import com.gomyck.trans4j.filter.ConverterFilter;
 import com.gomyck.trans4j.filter.InnerConverterFilter;
 import com.gomyck.trans4j.handler.AbstractConverterHandler;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
+import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
 import com.gomyck.trans4j.support.ConverterUtil;
 import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.DataFilter;
@@ -76,15 +77,18 @@ public class DicConverterHandler extends AbstractConverterHandler {
    */
   private final List<ConverterFilter<BeforeDicHandleInfo, AfterDicHandleInfo>> filters = new ArrayList<>();
 
+  private AutoEncoder autoEncoder;
+
   /**
    * 初始化方法, reload 字典时使用
    */
   @Getter
   private final List<Function<Object, List<Map<String, Object>>>> initDicInfoFunc = new ArrayList<>();
 
-  public DicConverterHandler(DicDescribeAdaptor adaptor, ConverterHandlerComposite converterHandlerComposite) {
+  public DicConverterHandler(DicDescribeAdaptor adaptor, AutoEncoder autoEncoder, ConverterHandlerComposite converterHandlerComposite) {
     super(converterHandlerComposite);
     this.adaptor = adaptor;
+    this.autoEncoder = autoEncoder;
   }
 
   /**
@@ -361,6 +365,11 @@ public class DicConverterHandler extends AbstractConverterHandler {
       }
     }
     return convertInfo;
+  }
+
+  @Override
+  public Object beforeHandler(Object input) {
+    return super.beforeHandler(input);
   }
 
 }

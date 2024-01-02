@@ -20,6 +20,7 @@ import com.gomyck.trans4j.filter.dictionary.DicI18NFilter;
 import com.gomyck.trans4j.handler.ConverterHandler;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerFactory;
+import com.gomyck.trans4j.handler.dictionary.serialize.DefaultDicAutoEncoder;
 import com.gomyck.trans4j.profile.DicConfig;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
 import com.gomyck.util.CkFile;
@@ -151,7 +152,7 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
     } else {
       initDicAdaptor = DicDescribeAdaptor.initAdaptor(ckDicAdaptorConfig.getCode(), ckDicAdaptorConfig.getValue(), ckDicAdaptorConfig.getColumnName());
     }
-    DicConverterHandler dicConverterHandler = new DicConverterHandler(initDicAdaptor, converterHandlerComposite);
+    DicConverterHandler dicConverterHandler = new DicConverterHandler(initDicAdaptor, new DefaultDicAutoEncoder(), converterHandlerComposite);
     if (ifOpenI18N) {
       DicI18NFilter dicI18NFilter = new DicI18NFilter();
       dicConverterHandler.addInnerFilter(dicI18NFilter);
