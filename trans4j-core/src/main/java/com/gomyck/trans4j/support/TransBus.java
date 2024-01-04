@@ -45,27 +45,18 @@ public class TransBus {
    * 转换
    */
   public static void convert() {
-    convert(ConvertTypeEnum.DATABASE_RESULT_COLLECTION);
+    convert(ConverterType.PERSISTENT_CONVERTER);
   }
 
   /**
    * 转换
    *
-   * @param convertTypeEnum 转换类型
+   * @param converterType 转换类型
    */
-  public static void convert(ConvertTypeEnum... convertTypeEnum) {
-    if (convertTypeEnum == null || convertTypeEnum.length == 0) return;
-    List<ConvertTypeEnum> types = new ArrayList<>(Arrays.asList(convertTypeEnum));
+  public static void convert(ConverterType... converterType) {
+    if (converterType == null || converterType.length == 0) return;
+    List<ConverterType> types = new ArrayList<>(Arrays.asList(converterType));
     threadLocalSet(BusEnum.CONVERT_STATUS, types);
-  }
-
-  /**
-   * 是否跳过转换
-   *
-   * @return 转换开关标识
-   */
-  public static boolean ifConvert() {
-    return threadLocalGet(BusEnum.CONVERT_STATUS) != null;
   }
 
   /**
@@ -73,9 +64,9 @@ public class TransBus {
    *
    * @return 转换开关标识
    */
-  public static List<ConvertTypeEnum> getConvertType() {
-    List<ConvertTypeEnum> convertTypeEnums = (List<ConvertTypeEnum>) threadLocalGet(BusEnum.CONVERT_STATUS);
-    return convertTypeEnums == null ? Collections.EMPTY_LIST : convertTypeEnums;
+  public static List<ConverterType> getConvertType() {
+    List<ConverterType> converterTypes = (List<ConverterType>) threadLocalGet(BusEnum.CONVERT_STATUS);
+    return converterTypes == null ? Collections.EMPTY_LIST : converterTypes;
   }
 
   /**
@@ -201,26 +192,6 @@ public class TransBus {
    */
   public static ConverterHandler getCurrentHandler() {
     return (ConverterHandler) threadLocalGet(BusEnum.CURRENT_CONVERTER_HANDLER);
-  }
-
-  /**
-   * 设置转换模式
-   *
-   * @param handleTypeEnum handleEnum
-   */
-  public static void setHandleMode(HandleTypeEnum handleTypeEnum) {
-    if (handleTypeEnum == null) handleTypeEnum = HandleTypeEnum.HANDLE_MODE_ELEMENT;
-    threadLocalSet(BusEnum.HANDLE_MODE, handleTypeEnum);
-  }
-
-  /**
-   * 获取转换模式
-   *
-   * @return HandleEnum
-   */
-  public static HandleTypeEnum getHandleMode() {
-    HandleTypeEnum handleTypeEnum = (HandleTypeEnum) threadLocalGet(BusEnum.HANDLE_MODE);
-    return handleTypeEnum == null ? HandleTypeEnum.HANDLE_MODE_ELEMENT : handleTypeEnum;
   }
 
   /**

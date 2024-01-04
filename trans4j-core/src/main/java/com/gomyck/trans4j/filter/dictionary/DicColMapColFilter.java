@@ -38,7 +38,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 2020-05-11
  */
-public class DicColMapColFilter extends AbsDicConverterFilter {
+public class DicColMapColFilter extends AbstractDicConverterFilter {
 
   /**
    * 包含的字段名称

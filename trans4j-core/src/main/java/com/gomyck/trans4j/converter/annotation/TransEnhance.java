@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.gomyck.trans4j.converter.mvc.annotation;
+package com.gomyck.trans4j.converter.annotation;
+
+import com.gomyck.trans4j.support.ConverterType;
 
 import java.lang.annotation.*;
 
@@ -30,20 +32,12 @@ import java.lang.annotation.*;
 @Documented
 public @interface TransEnhance {
 
+  ConverterType[] converterType() default {ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER};
+
   boolean overTurn() default false;
 
-  /**
-   * 国际化标识设置(方法体内设置优先级最高)
-   *
-   * @return 国际化标识
-   */
   String i18nFlag() default "";
 
-  /**
-   * 把当前的 key 替换成翻译值, 用 key$K 来存储原值
-   *
-   * @return 是否使用原值替换
-   */
   boolean originOverride() default false;
 
 }

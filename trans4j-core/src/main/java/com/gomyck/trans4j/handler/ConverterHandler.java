@@ -49,7 +49,7 @@ public interface ConverterHandler {
     return input;
   }
 
-  void handle(Object obj);
+  Object handle(Object obj);
 
   default Object afterHandler(Object input) {
     return input;

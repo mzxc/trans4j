@@ -1,5 +1,5 @@
 /*
- * Copyright [2024] [trans4j@gomyck.com]
+ * Copyright [2023] [trans4j@gomyck.com]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package com.gomyck.trans4j.handler.dictionary.serialize;
+package com.gomyck.trans4j.cache;
 
-import com.gomyck.util.serialize.CKJSON;
+import com.gomyck.trans4j.converter.annotation.TransEnhance;
+import org.springframework.stereotype.Component;
 
-public class DefaultDicAutoEncoder implements AutoEncoder{
-
-  @Override
-  public Object encode(Object input) {
-    return CKJSON.getInstance().toJsonMap(input);
-  }
-
-  @Override
-  public Object decode(Object input) {
-    return null;
-  }
+@Component
+public class MemCache4ResultConvert extends AbstractCache<String, TransEnhance> {
 
 }

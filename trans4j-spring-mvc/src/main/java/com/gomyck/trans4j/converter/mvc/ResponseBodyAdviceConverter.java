@@ -20,20 +20,17 @@ package com.gomyck.trans4j.converter.mvc;
 import com.gomyck.trans4j.converter.Converter;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
-import com.gomyck.trans4j.support.ConvertTypeEnum;
+import com.gomyck.trans4j.support.ConverterType;
 import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.log.logger.CkLogger;
-import com.gomyck.util.serialize.CKJSON;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-
-import java.util.Objects;
 
 /**
  * 消息增强
@@ -52,6 +49,7 @@ import java.util.Objects;
  */
 @Slf4j
 @ControllerAdvice
+@AllArgsConstructor
 public class ResponseBodyAdviceConverter implements Converter, ResponseBodyAdvice<Object> {
 
   public static final String RESPONSE_ADVICE_CONFIG_VALUE = Trans4JProfiles.CONVERTER_PREFIX + ".message-advice";
@@ -59,7 +57,6 @@ public class ResponseBodyAdviceConverter implements Converter, ResponseBodyAdvic
   /**
    * 处理器集合
    */
-  @Autowired
   private ConverterHandlerComposite converterHandlerComposite;
 
   @Override
@@ -75,10 +72,8 @@ public class ResponseBodyAdviceConverter implements Converter, ResponseBodyAdvic
   @Override
   public Object doConvert(Object result) {
     try {
-      if (TransBus.ifConvert() && TransBus.getConvertType().contains(ConvertTypeEnum.RESPONSE_MESSAGE_ENHANCE)) {
-        if (Objects.isNull(result)) return null;
-        result = CKJSON.getInstance().toJsonMap(result);
-        converterHandlerComposite.handle(result);
+      if (TransBus.getConvertType().contains(ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER)) {
+        result = converterHandlerComposite.handle(result);
       }
     } catch (Exception e) {
       log.debug("exception is {}", CkLogger.getTrace(e));

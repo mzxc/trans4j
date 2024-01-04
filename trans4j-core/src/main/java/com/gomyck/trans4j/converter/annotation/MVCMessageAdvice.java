@@ -22,19 +22,17 @@
  *
  */
 
-package com.gomyck.trans4j.converter.mvc.aop;
+package com.gomyck.trans4j.converter.annotation;
 
 import com.gomyck.trans4j.cache.MemCache4ResultConvert;
-import com.gomyck.trans4j.converter.mvc.annotation.TransEnhance;
-import com.gomyck.trans4j.support.ConvertTypeEnum;
 import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.ObjectJudge;
+import lombok.AllArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -50,15 +48,14 @@ import java.text.MessageFormat;
  */
 @Aspect
 @Primary
+@AllArgsConstructor
 @Component("MVCMessageAdvice-origin")
 public class MVCMessageAdvice {
 
-  @Autowired
   MemCache4ResultConvert memCache4ResultConvert;
 
-  @Pointcut("@annotation(com.gomyck.trans4j.converter.mvc.annotation.TransEnhance)")
-  public void pointCut() {
-  }
+  @Pointcut("@annotation(com.gomyck.trans4j.converter.annotation.TransEnhance)")
+  public void pointCut() {}
 
   @Around("pointCut()")
   public Object aroundIt(ProceedingJoinPoint point) throws Throwable {
@@ -72,12 +69,10 @@ public class MVCMessageAdvice {
       annotation = method.getAnnotation(TransEnhance.class);
       memCache4ResultConvert.setCache(fullMethodName, annotation);
     }
-    // 保证方法体内的代码优先级最高
     if (annotation.overTurn()) TransBus.overturn();
     if (ObjectJudge.notNull(annotation.i18nFlag())) TransBus.setI18nFlag(annotation.i18nFlag());
     TransBus.setOriginFlag(annotation.originOverride());
-    TransBus.convert(ConvertTypeEnum.RESPONSE_MESSAGE_ENHANCE);
-    // 保证方法体内的代码优先级最高
+    TransBus.convert(annotation.converterType());
     return point.proceed();
   }
 

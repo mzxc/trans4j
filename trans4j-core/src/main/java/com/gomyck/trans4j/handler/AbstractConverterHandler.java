@@ -18,6 +18,7 @@ package com.gomyck.trans4j.handler;
 
 import lombok.AllArgsConstructor;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -49,6 +50,23 @@ public abstract class AbstractConverterHandler implements ConverterHandler {
   public final boolean equals(Object obj) {
     if (Objects.isNull(obj) || !(obj instanceof AbstractConverterHandler)) return false;
     return this.getHandlerName().equals(((AbstractConverterHandler) obj).getHandlerName());
+  }
+
+  @Override
+  public Object handle(Object object) {
+    if (Objects.isNull(object)) return object;
+    if (object instanceof Iterable) {
+      ((Iterable) object).forEach(this::handle);
+    }
+    return object;
+  }
+
+  public boolean recursion(Object object) {
+    if (Objects.isNull(object) || object instanceof Map || object instanceof Iterable) {
+      this.handle(object);
+      return true;
+    }
+    return false;
   }
 
 }

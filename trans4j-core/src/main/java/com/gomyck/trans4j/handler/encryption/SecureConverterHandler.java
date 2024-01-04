@@ -42,9 +42,9 @@ public class SecureConverterHandler extends AbstractConverterHandler {
   }
 
   @Override
-  public void handle(Object obj) {
+  public Object handle(Object obj) {
     SecureEntity param = (SecureEntity) obj;
-
+    return obj;
   }
 
 }

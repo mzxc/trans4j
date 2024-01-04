@@ -17,12 +17,12 @@
 
 package com.gomyck.trans4j.converter.rest;
 
-import com.gomyck.trans4j.converter.mvc.annotation.TransEnhance;
+import com.gomyck.trans4j.converter.annotation.TransEnhance;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.handler.dictionary.DicInfoHolder;
 import com.gomyck.util.ObjectJudge;
 import com.gomyck.util.servlet.R;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,10 +40,10 @@ import java.util.Map;
  * @since 2023/11/3
  */
 @RestController
+@AllArgsConstructor
 @RequestMapping("ckConverter")
 public class RestConverter {
 
-  @Autowired
   private ConverterHandlerComposite converterHandlerComposite;
 
   @PostMapping(value = "doConverter", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

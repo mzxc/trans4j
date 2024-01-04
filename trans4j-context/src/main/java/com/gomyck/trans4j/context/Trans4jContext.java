@@ -21,6 +21,7 @@ import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerFactory;
 import com.gomyck.trans4j.handler.dictionary.DicConverterInitConditional;
 import com.gomyck.trans4j.handler.dictionary.DicInfoConverterHandlerFactory;
+import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,9 @@ public class Trans4jContext {
   @Nullable
   private DataSource dataSource;
 
+  @Nullable
+  private AutoEncoder autoEncoder;
+
   @Bean
   @Order(Integer.MIN_VALUE)
   public FilterComposite<?, ?> initFilterComposite() {
@@ -49,7 +53,7 @@ public class Trans4jContext {
   @Bean
   @Order(Integer.MIN_VALUE)
   public ConverterHandlerComposite initHandlerComposite() {
-    return new ConverterHandlerComposite();
+    return new ConverterHandlerComposite(initFilterComposite());
   }
 
   @Bean
@@ -59,6 +63,7 @@ public class Trans4jContext {
     dicInfoConverterHandlerFactory.setTrans4jProfiles(trans4jProfiles);
     dicInfoConverterHandlerFactory.setDataSource(dataSource);
     dicInfoConverterHandlerFactory.setConverterHandlerComposite(initHandlerComposite());
+    if(autoEncoder != null) dicInfoConverterHandlerFactory.setAutoEncoder(autoEncoder);
     return dicInfoConverterHandlerFactory;
   }
 

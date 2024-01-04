@@ -20,7 +20,7 @@ import com.gomyck.trans4j.filter.dictionary.DicI18NFilter;
 import com.gomyck.trans4j.handler.ConverterHandler;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerFactory;
-import com.gomyck.trans4j.handler.dictionary.serialize.DefaultDicAutoEncoder;
+import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
 import com.gomyck.trans4j.profile.DicConfig;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
 import com.gomyck.util.CkFile;
@@ -52,6 +52,8 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
   private DataSource dataSource;
   @Setter
   private ConverterHandlerComposite converterHandlerComposite;
+  @Setter
+  private AutoEncoder autoEncoder = input -> input;
 
   private boolean fileExist = true;
 
@@ -78,31 +80,58 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
     this.dicConverterHandler = dicConverterHandler;
   }
 
-  private void initHandlerByFile(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
-    final String initDicFile = ckDicAdaptorConfig.getInitDicFile();
+  private DicConverterHandler getDicConverterHandler(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig) {
+    final boolean ifOpenI18N = ObjectJudge.notNull(ckDicAdaptorConfig.getI18n());
+    DicDescribeAdaptor initDicAdaptor;
+    if (ifOpenI18N) {
+      initDicAdaptor = DicDescribeAdaptor.initAdaptor(ckDicAdaptorConfig.getCode(), ckDicAdaptorConfig.getValue(), ckDicAdaptorConfig.getColumnName(), ckDicAdaptorConfig.getI18n(), ckDicAdaptorConfig.getDefaultI18nFlag());
+    } else {
+      initDicAdaptor = DicDescribeAdaptor.initAdaptor(ckDicAdaptorConfig.getCode(), ckDicAdaptorConfig.getValue(), ckDicAdaptorConfig.getColumnName());
+    }
+    DicConverterHandler dicConverterHandler = new DicConverterHandler(initDicAdaptor, autoEncoder, converterHandlerComposite);
+    if (ifOpenI18N) {
+      DicI18NFilter dicI18NFilter = new DicI18NFilter();
+      dicConverterHandler.addInnerFilter(dicI18NFilter);
+    }
+    return dicConverterHandler;
+  }
+
+  private void initHandlerByDatabase(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
+    final List<String> initDicSql = ckDicAdaptorConfig.getInitDicSql();
+    if (ObjectJudge.isNull(initDicSql)) return;
+    if (dataSource == null) throw new RuntimeException("init dic info error, please declare a datasource on your server or delete init sql array in the yaml file");
     dicConverterHandler.init(handler -> {
-      if (!fileExist) return null;
-      try {
-        final byte[] file = CkFile.getFile(initDicFile);
-        String dicInfo = new String(file);
-        try {
-          final List<Map<String, Object>> maps = CKJSON.getInstance().parseListMap(dicInfo);
-          log.info(MessageFormat.format("init dic info with file: {0}, result size is: {1}", initDicFile, maps.size()));
-          return maps;
-        } catch (Exception e) {
-          log.error("dicFile format error(must be json array), please check your file,  error is: ", e);
-          return null;
+      final List<Map<String, Object>> dicInfo = new ArrayList<>();
+      initDicSql.forEach(sql -> {
+        try (final PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(sql); final ResultSet resultSet = preparedStatement.executeQuery()) {
+          final List<Map<String, Object>> result = convertDicInfo2ListMap(resultSet);
+          log.info(MessageFormat.format("init dic info with sql: {0}, result size is: {1}", sql, result.size()));
+          dicInfo.addAll(result);
+        } catch (SQLException e) {
+          throw new RuntimeException(MessageFormat.format("init dic info error, sql is: {0}, error is: {1}", sql, e));
         }
-      } catch (Exception e) {
-        fileExist = false;
-        if (DicConfig.CkDicAdaptorConfig.DEFAULT_DIC_INFO_FILE_NAME.equals(initDicFile)) {
-          log.warn("default dic file is not found.");
+      });
+      return dicInfo;
+    });
+  }
+
+  private List<Map<String, Object>> convertDicInfo2ListMap(ResultSet rs) throws SQLException {
+    List<Map<String, Object>> list = new ArrayList<>();
+    ResultSetMetaData md = rs.getMetaData();
+    int columnCount = md.getColumnCount();
+    while (rs.next()) {
+      Map<String, Object> rowData = new HashMap<>();
+      for (int i = 1; i <= columnCount; i++) {
+        final String columnLabel = md.getColumnLabel(i);
+        if (ObjectJudge.notNull(columnLabel)) {
+          rowData.put(columnLabel, rs.getObject(i));
         } else {
-          log.error("dicFile is not found, please check your file path.");
+          rowData.put(md.getColumnName(i), rs.getObject(i));
         }
       }
-      return null;
-    });
+      list.add(rowData);
+    }
+    return list;
   }
 
   private static void initHandlerByRestServer(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
@@ -125,58 +154,32 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory {
     });
   }
 
-  private void initHandlerByDatabase(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
-    final List<String> initDicSql = ckDicAdaptorConfig.getInitDicSql();
-    if (ObjectJudge.isNull(initDicSql)) return;
-    if (dataSource == null) throw new RuntimeException("init dic info error, please declare a datasource on your server or delete init sql array in the yaml file");
+  private void initHandlerByFile(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig, DicConverterHandler dicConverterHandler) {
+    final String initDicFile = ckDicAdaptorConfig.getInitDicFile();
     dicConverterHandler.init(handler -> {
-      final List<Map<String, Object>> dicInfo = new ArrayList<>();
-      initDicSql.forEach(sql -> {
-        try (final PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(sql); final ResultSet resultSet = preparedStatement.executeQuery()) {
-          final List<Map<String, Object>> result = convertDicInfo2ListMap(resultSet);
-          log.info(MessageFormat.format("init dic info with sql: {0}, result size is: {1}", sql, result.size()));
-          dicInfo.addAll(result);
-        } catch (SQLException e) {
-          throw new RuntimeException(MessageFormat.format("init dic info error, sql is: {0}, error is: {1}", sql, e));
+      if (!fileExist) return null;
+      try {
+        final byte[] file = CkFile.getFile(initDicFile);
+        String dicInfo = new String(file);
+        try {
+          final List<Map<String, Object>> maps = CKJSON.getInstance().parseListMap(dicInfo);
+          log.info(MessageFormat.format("init dic info with file: {0}, result size is: {1}", initDicFile, maps.size()));
+          return maps;
+        } catch (Exception e) {
+          log.error("dicFile format error(must be json array), please check your file,  error is: ", e);
+          return null;
         }
-      });
-      return dicInfo;
+      } catch (Exception e) {
+        fileExist = false;
+        if (DicConfig.CkDicAdaptorConfig.DEFAULT_DIC_INFO_FILE_NAME.equals(initDicFile)) {
+          log.debug("default dic file is not found.");
+        } else {
+          log.error("dicFile is not found, please check your file path.");
+        }
+      }
+      return null;
     });
   }
 
-  private DicConverterHandler getDicConverterHandler(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig) {
-    final boolean ifOpenI18N = ObjectJudge.notNull(ckDicAdaptorConfig.getI18n());
-    DicDescribeAdaptor initDicAdaptor;
-    if (ifOpenI18N) {
-      initDicAdaptor = DicDescribeAdaptor.initAdaptor(ckDicAdaptorConfig.getCode(), ckDicAdaptorConfig.getValue(), ckDicAdaptorConfig.getColumnName(), ckDicAdaptorConfig.getI18n(), ckDicAdaptorConfig.getDefaultI18nFlag());
-    } else {
-      initDicAdaptor = DicDescribeAdaptor.initAdaptor(ckDicAdaptorConfig.getCode(), ckDicAdaptorConfig.getValue(), ckDicAdaptorConfig.getColumnName());
-    }
-    DicConverterHandler dicConverterHandler = new DicConverterHandler(initDicAdaptor, new DefaultDicAutoEncoder(), converterHandlerComposite);
-    if (ifOpenI18N) {
-      DicI18NFilter dicI18NFilter = new DicI18NFilter();
-      dicConverterHandler.addInnerFilter(dicI18NFilter);
-    }
-    return dicConverterHandler;
-  }
-
-  private List<Map<String, Object>> convertDicInfo2ListMap(ResultSet rs) throws SQLException {
-    List<Map<String, Object>> list = new ArrayList<>();
-    ResultSetMetaData md = rs.getMetaData();
-    int columnCount = md.getColumnCount();
-    while (rs.next()) {
-      Map<String, Object> rowData = new HashMap<>();
-      for (int i = 1; i <= columnCount; i++) {
-        final String columnLabel = md.getColumnLabel(i);
-        if (ObjectJudge.notNull(columnLabel)) {
-          rowData.put(columnLabel, rs.getObject(i));
-        } else {
-          rowData.put(md.getColumnName(i), rs.getObject(i));
-        }
-      }
-      list.add(rowData);
-    }
-    return list;
-  }
 
 }

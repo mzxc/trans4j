@@ -28,11 +28,7 @@ package com.gomyck.trans4j.support;
  * @version [gomyck-quickdev-1.0.0]
  * @since 2022/2/8 15:56
  */
-public enum ConvertTypeEnum {
-
-  // 数据库结果集转换
-  DATABASE_RESULT_COLLECTION,
-  // 消息增强
-  RESPONSE_MESSAGE_ENHANCE
-
+public enum ConverterType {
+  PERSISTENT_CONVERTER,
+  RESPONSE_MESSAGE_ENHANCE_CONVERTER
 }

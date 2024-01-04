@@ -46,11 +46,11 @@ import org.springframework.stereotype.Component;
 public class DicConverterHandlerSchedule implements SchedulingConfigurer {
 
   @Autowired
-  Trans4JProfiles trans4jProfiles;
+  private Trans4JProfiles trans4jProfiles;
 
   @Lazy
   @Autowired
-  DicConverterHandler dicConverterHandler;
+  private DicConverterHandler dicConverterHandler;
 
   @Override
   public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {

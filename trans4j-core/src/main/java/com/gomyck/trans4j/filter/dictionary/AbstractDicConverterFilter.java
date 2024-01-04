@@ -21,7 +21,6 @@ import com.gomyck.trans4j.handler.ConverterHandler;
 import com.gomyck.trans4j.handler.dictionary.AfterDicHandleInfo;
 import com.gomyck.trans4j.handler.dictionary.BeforeDicHandleInfo;
 import com.gomyck.trans4j.handler.dictionary.DicConverterHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
@@ -36,10 +35,7 @@ import java.util.Objects;
  * @version [1.0.0]
  * @since 2022/9/1
  */
-public abstract class AbsDicConverterFilter implements InnerConverterFilter<BeforeDicHandleInfo, AfterDicHandleInfo> {
-
-  @Autowired
-  DicConverterHandler dicConverterHandler;
+public abstract class AbstractDicConverterFilter implements InnerConverterFilter<BeforeDicHandleInfo, AfterDicHandleInfo> {
 
   private final String filterName = "CK_INNER_DIC_FILTER_" + this.getClass().getName();
 
@@ -55,13 +51,8 @@ public abstract class AbsDicConverterFilter implements InnerConverterFilter<Befo
 
   @Override
   public boolean equals(Object obj) {
-    if (Objects.isNull(obj) || !(obj instanceof AbsDicConverterFilter)) return false;
-    return this.getFilterName().equals(((AbsDicConverterFilter) obj).getFilterName());
-  }
-
-  @Override
-  public void afterPropertiesSet() {
-    dicConverterHandler.addInnerFilter(this);
+    if (Objects.isNull(obj) || !(obj instanceof AbstractDicConverterFilter)) return false;
+    return this.getFilterName().equals(((AbstractDicConverterFilter) obj).getFilterName());
   }
 
   /**
@@ -91,4 +82,8 @@ public abstract class AbsDicConverterFilter implements InnerConverterFilter<Befo
 
   public abstract void clearProp();
 
+  @Override
+  public void afterPropertiesSet() {
+
+  }
 }

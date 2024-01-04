@@ -16,16 +16,16 @@
 
 package com.gomyck.trans4j.filter;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 
 import java.util.Objects;
 
 /**
  * @author gomyck
  */
+@AllArgsConstructor
 public abstract class AbstractConverterFilter<B, A> implements OuterConverterFilter<B, A> {
 
-  @Autowired
   FilterComposite<B, A> filterComposite;
 
   @Override

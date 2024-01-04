@@ -34,7 +34,7 @@ import java.util.Set;
  * @version [1.0.0]
  * @since 2022/9/1
  */
-public class DicExcludeFilter extends AbsDicConverterFilter {
+public class DicExcludeFilter extends AbstractDicConverterFilter {
 
   private final Set<String> excludeColNames = new HashSet<>();
 

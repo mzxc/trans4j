@@ -19,6 +19,8 @@ package com.gomyck.trans4j.converter.persistent.mybatis;
 
 import com.gomyck.trans4j.converter.Converter;
 import com.gomyck.trans4j.converter.persistent.ResultCollectionConverter;
+import com.gomyck.trans4j.handler.ConverterHandlerComposite;
+import com.gomyck.trans4j.profile.Trans4JProfiles;
 import com.gomyck.trans4j.support.TransBus;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.*;
@@ -37,6 +39,10 @@ import java.util.Properties;
  */
 @Intercepts({@Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})})
 public class MyBatisConverter extends ResultCollectionConverter implements Interceptor, Converter {
+
+  public MyBatisConverter(ConverterHandlerComposite converterHandlerComposite, Trans4JProfiles trans4jProfiles) {
+    super(converterHandlerComposite, trans4jProfiles);
+  }
 
   @Override
   public Object intercept(Invocation invocation) throws Throwable {

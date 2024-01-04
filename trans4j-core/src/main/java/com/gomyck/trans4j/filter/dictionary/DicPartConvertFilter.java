@@ -38,7 +38,7 @@ import java.util.List;
  * @version [1.0.0]
  * @since 2022/9/2
  */
-public class DicPartConvertFilter extends AbsDicConverterFilter {
+public class DicPartConvertFilter extends AbstractDicConverterFilter {
 
   private final List<String> includeColNames = new ArrayList<>();
 

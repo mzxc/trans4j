@@ -28,7 +28,7 @@ import com.gomyck.util.ObjectJudge;
  * @version 1.0.0
  * @since 2020-05-11
  */
-public class DicI18NFilter extends AbsDicConverterFilter {
+public class DicI18NFilter extends AbstractDicConverterFilter {
 
   @Override
   public void afterConvert(AfterDicHandleInfo convertInfo) {

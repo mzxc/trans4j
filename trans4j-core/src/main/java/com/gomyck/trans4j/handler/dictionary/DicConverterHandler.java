@@ -77,7 +77,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
    */
   private final List<ConverterFilter<BeforeDicHandleInfo, AfterDicHandleInfo>> filters = new ArrayList<>();
 
-  private AutoEncoder autoEncoder;
+  private final AutoEncoder autoEncoder;
 
   /**
    * 初始化方法, reload 字典时使用
@@ -196,137 +196,114 @@ public class DicConverterHandler extends AbstractConverterHandler {
   }
 
   @Override
-  public void handle(Object resultSet) {
+  public Object handle(Object resultSet) {
+    super.handle(resultSet);
     if (resultSet instanceof Map) {
-      this.convertDicColumnInfo4Map((Map) resultSet);
+      this.convertDicColumnInfo4Map((Map<String, Object>) resultSet);
     } else if (!FieldUtil.isBaseType(resultSet.getClass().getTypeName())) {
-      this.convertDicColumnInfo(resultSet);
+      this.convertDicColumnInfo4Entity(resultSet);
     }
+    return resultSet;
   }
 
   /**
    * 翻译map类数据
-   * 如果是使用 mvc 增强方式, 则永远会用此函数做翻译操作, 在前一步会把实体转换成 map
    *
-   * @param resultSet 结果集
+   * @param resultSet4row 结果集(一行)  key是列名称, value是列值
    */
-  private void convertDicColumnInfo4Map(Map<String, Object> resultSet) {
+  private void convertDicColumnInfo4Map(Map<String, Object> resultSet4row) {
     boolean ifOverturn = TransBus.isOverturn();
     boolean originFlag = TransBus.getOriginFlag();
     final Map<String, Map<String, Object>> _finalDicInfo = !ifOverturn ? DIC_INFO : DIC_INFO_OVERTURN;
     Map<String, Object> addInfo = new HashMap<>();
-    resultSet.keySet().forEach(resultColName -> {
+    resultSet4row.keySet().forEach(resultColName -> {
       // 获取结果集信息  开始递归
-      if (recursion(resultSet.get(resultColName), ifOverturn)) return;
+      if (recursion(resultSet4row.get(resultColName))) return;
 
       // 字段名下划线转驼峰, 并大写, 与工具类统一格式
       String colName = ConverterUtil.getCommonColName(resultColName);
       Map<String, Object> usedDicInfo = _finalDicInfo.get(colName);
 
       // 获取原值
-      String biz_code = DataFilter.toString(resultSet.get(resultColName)); //当前字段的结果  exp: name(resultColName): 001(biz_value)
+      String colValue = DataFilter.toString(resultSet4row.get(resultColName)); //当前字段的结果  exp: name(resultColName): 001(biz_value)
 
       // 翻译前置拦截器============在翻译之前允许替换字典
-      final BeforeDicHandleInfo beforeDicHandleInfo = initBeforeConvertInfo(colName, biz_code, usedDicInfo, _finalDicInfo);
+      final BeforeDicHandleInfo beforeDicHandleInfo = initBeforeConvertInfo(colName, colValue, usedDicInfo, _finalDicInfo);
       usedDicInfo = beforeDicHandleInfo.getUsedDicInfo();
       // 翻译前置拦截器============在翻译之前允许替换字典
 
       // 开始翻译
-      Object convert_biz_value = null;
+      Object convert_col_value = null;
       boolean ifMatchDic = usedDicInfo != null;
       if (ifMatchDic) {
-        convert_biz_value = usedDicInfo.get(biz_code);
+        convert_col_value = usedDicInfo.get(colValue);
       } else {
         usedDicInfo = new HashMap<>();
       }
 
       // 翻译后置拦截器============在翻译之后允许替换翻译值
-      final AfterDicHandleInfo afterDicHandleInfo = initAfterConvertInfo(colName, biz_code, convert_biz_value, usedDicInfo, _finalDicInfo);
-      convert_biz_value = afterDicHandleInfo.getTargetValue();
+      final AfterDicHandleInfo afterDicHandleInfo = initAfterConvertInfo(colName, colValue, convert_col_value, usedDicInfo, _finalDicInfo);
+      convert_col_value = afterDicHandleInfo.getTargetValue();
       // 翻译后置拦截器============在翻译之后允许替换翻译值
 
       if (originFlag) {
-        if (convert_biz_value != null) {
-          resultSet.put(resultColName, convert_biz_value); //不为空才做翻译处理, 否则返回原值
-          addInfo.put(resultColName.concat("$K"), biz_code); //保留原值到新的字段
+        if (convert_col_value != null) {
+          resultSet4row.put(resultColName, convert_col_value); //不为空才做翻译处理, 否则返回原值
+          addInfo.put(resultColName.concat("$K"), colValue); //保留原值到新的字段
         }
       } else {
-        if (convert_biz_value != null || ifMatchDic) addInfo.put(resultColName.concat("$V"), convert_biz_value); //匹配了字典也要有这个字段, 因为前端可能会用
+        if (convert_col_value != null || ifMatchDic) addInfo.put(resultColName.concat("$V"), convert_col_value); //匹配了字典也要有这个字段, 因为前端可能会用
       }
     });
-    resultSet.putAll(addInfo);
+    resultSet4row.putAll(addInfo);
   }
 
   /**
    * 翻译实体类数据
    *
-   * @param resultSet 结果集
+   * @param resultSet4Row 结果集(一行) field为列名, value为列值
    */
-  private void convertDicColumnInfo(Object resultSet) {
+  private void convertDicColumnInfo4Entity(Object resultSet4Row) {
     boolean ifOverturn = TransBus.isOverturn();
     final Map<String, Map<String, Object>> _finalDicInfo = !ifOverturn ? DIC_INFO : DIC_INFO_OVERTURN;
-    List<Field> allFields = FieldUtil.getAllFields(resultSet.getClass());
+    List<Field> allFields = FieldUtil.getAllFields(resultSet4Row.getClass());
     allFields.forEach(field -> {
       try {
         // 获取结果集信息  开始递归
-        Method getMethod = FieldUtil.getMethod(resultSet.getClass(), field.getName());
-        Object invoke = getMethod.invoke(resultSet);
-        if (recursion(invoke, ifOverturn)) return;
+        Method getMethod4FieldValue = FieldUtil.getMethod(resultSet4Row.getClass(), field.getName());
+        Object fieldValue = getMethod4FieldValue.invoke(resultSet4Row);
+        if (recursion(fieldValue)) return;
 
         // 下划线转驼峰并大写, 与工具类统一格式
         String colName = ConverterUtil.getCommonColName(field.getName());
         Map<String, Object> usedDicInfo = _finalDicInfo.get(colName);
 
         // 获取原值
-        String biz_code = DataFilter.toString(invoke);
-        Method setMethod = FieldUtil.setMethod(resultSet.getClass(), field.getName(), invoke.getClass());
+        String colValue = DataFilter.toString(fieldValue);
+        Method setMethod = FieldUtil.setMethod(resultSet4Row.getClass(), field.getName(), fieldValue.getClass());
 
         // 翻译前置拦截器============在翻译之前允许替换字典
-        final BeforeDicHandleInfo beforeDicHandleInfo = initBeforeConvertInfo(colName, biz_code, usedDicInfo, _finalDicInfo);
+        final BeforeDicHandleInfo beforeDicHandleInfo = initBeforeConvertInfo(colName, colValue, usedDicInfo, _finalDicInfo);
         usedDicInfo = beforeDicHandleInfo.getUsedDicInfo();
         // 翻译前置拦截器============在翻译之前允许替换字典
 
         // 开始翻译
-        Object convert_biz_value = null;
+        Object convert_col_value = null;
         if (usedDicInfo != null) {
-          convert_biz_value = usedDicInfo.get(biz_code);
+          convert_col_value = usedDicInfo.get(colValue);
         } else {
           usedDicInfo = new HashMap<>();
         }
 
         // 翻译后置拦截器============在翻译之后允许替换翻译值
-        final AfterDicHandleInfo afterDicHandleInfo = initAfterConvertInfo(colName, biz_code, convert_biz_value, usedDicInfo, _finalDicInfo);
-        convert_biz_value = afterDicHandleInfo.getTargetValue();
+        final AfterDicHandleInfo afterDicHandleInfo = initAfterConvertInfo(colName, colValue, convert_col_value, usedDicInfo, _finalDicInfo);
+        convert_col_value = afterDicHandleInfo.getTargetValue();
         // 翻译后置拦截器============在翻译之后允许替换翻译值
 
-        if (convert_biz_value != null) setMethod.invoke(resultSet, convert_biz_value);
+        if (convert_col_value != null) setMethod.invoke(resultSet4Row, convert_col_value);
       } catch (Exception ignored) {
       }
     });
-  }
-
-  /**
-   * 递归翻译
-   *
-   * @param _value     当前数据中的子集
-   * @param ifOverturn 是否翻转翻译
-   * @return boolean 是否发生递归动作
-   */
-  private boolean recursion(Object _value, boolean ifOverturn) {
-    if (_value == null) return true;
-    if (_value instanceof Map) {
-      this.convertDicColumnInfo4Map((Map) _value);
-      return true;
-    } else if (_value instanceof Iterable) {
-      ((Iterable) _value).forEach(e -> {
-        if (Objects.isNull(e)) return;
-        this.handle(e);
-      });
-      return true;
-    }
-    //都不满足的话, 说明当前属性不可继续下钻, 返回false, 释放foreach的循环继续向下
-    //反之返回true, 转换方法里return相当于普通for的continue
-    return false;
   }
 
   private BeforeDicHandleInfo initBeforeConvertInfo(String commonName, Object originValue, Map<String, Object> usedDicInfo, Map<String, Map<String, Object>> overallDicInfo) {
@@ -369,7 +346,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
 
   @Override
   public Object beforeHandler(Object input) {
-    return super.beforeHandler(input);
+    return autoEncoder.encode(input);
   }
 
 }

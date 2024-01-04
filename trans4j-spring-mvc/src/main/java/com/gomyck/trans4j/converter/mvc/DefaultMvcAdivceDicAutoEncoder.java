@@ -1,5 +1,5 @@
 /*
- * Copyright [2023] [trans4j@gomyck.com]
+ * Copyright [2024] [trans4j@gomyck.com]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package com.gomyck.trans4j.cache;
+package com.gomyck.trans4j.converter.mvc;
 
-import com.gomyck.trans4j.converter.mvc.annotation.TransEnhance;
-import org.springframework.stereotype.Component;
+import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
+import com.gomyck.trans4j.support.ConverterType;
+import com.gomyck.trans4j.support.TransBus;
+import com.gomyck.util.serialize.CKJSON;
 
-@Component
-public class MemCache4ResultConvert extends AbstractCache<String, TransEnhance> {
+public class DefaultMvcAdivceDicAutoEncoder implements AutoEncoder {
+
+  @Override
+  public Object encode(Object input) {
+    if(TransBus.getConvertType().contains(ConverterType.PERSISTENT_CONVERTER)) {
+      return input;
+    }
+    return CKJSON.getInstance().toJsonMap(input);
+  }
 
 }

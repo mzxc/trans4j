@@ -20,6 +20,4 @@ public interface AutoEncoder {
 
   Object encode(Object input);
 
-  Object decode(Object input);
-
 }

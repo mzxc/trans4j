@@ -38,7 +38,7 @@ import java.util.function.Function;
  * @version [1.0.0]
  * @since 2023/5/22
  */
-public class CustomValueFilter extends AbsDicConverterFilter {
+public class CustomValueFilter extends AbstractDicConverterFilter {
 
   private final List<CVInfo> cvInfos = new ArrayList<>();
 

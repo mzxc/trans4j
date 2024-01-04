@@ -17,9 +17,8 @@
 package com.gomyck.trans4j.handler;
 
 import com.gomyck.trans4j.filter.FilterComposite;
-import com.gomyck.trans4j.support.HandleTypeEnum;
 import com.gomyck.trans4j.support.TransBus;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -37,15 +36,12 @@ import java.util.Objects;
  * @version [1.0.0]
  * @since 2022/12/12
  */
+@AllArgsConstructor
 public class ConverterHandlerComposite implements ConverterHandler {
 
-  @Autowired
-  protected FilterComposite<Object, Object> filterComposite;
+  protected FilterComposite<?, ?> filterComposite;
 
   private final List<ConverterHandler> converterHandlers = new ArrayList<>();
-
-  public ConverterHandlerComposite() {
-  }
 
   public void addHandler(ConverterHandler converterHandler) {
     if (converterHandlers.contains(converterHandler)) return;
@@ -59,23 +55,18 @@ public class ConverterHandlerComposite implements ConverterHandler {
   }
 
   @Override
-  public void handle(Object obj) {
+  public Object handle(Object obj) {
+    if (Objects.isNull(obj)) return obj;
     for (ConverterHandler handler : converterHandlers) {
       if (!handler.support(obj)) continue;
       TransBus.setCurrentHandler(handler);
-      final HandleTypeEnum handleMode = TransBus.getHandleMode();
-      if (handleMode == HandleTypeEnum.HANDLE_MODE_ELEMENT && obj instanceof Iterable) {
-        ((Iterable) obj).forEach(this::handle);
-      } else {
-        if (Objects.isNull(obj)) return;
-        filterComposite.beforeConvert(obj);
-        if ((obj = handler.beforeHandler(obj)) == null) continue;
-        handler.handle(obj);
-        if ((obj = handler.afterHandler(obj))  == null) continue;
-        filterComposite.afterConvert(obj);
-      }
+      filterComposite.beforeConvert(obj);
+      if ((obj = handler.beforeHandler(obj)) == null) continue;
+      handler.handle(obj);
+      if ((obj = handler.afterHandler(obj))  == null) continue;
+      filterComposite.afterConvert(obj);
     }
+    return obj;
   }
-
 
 }
