@@ -31,7 +31,7 @@ import java.util.Properties;
  * 结果集转换
  * mybatis 插件, 如果当前工程持久层框架为 mybatis 会自动注册该类为 bean
  *
- * @author 郝洋 QQ:474798383
+ * @author gomyck QQ:474798383
  * @version [版本号/1.0]
  * @since [2019-07-17]
  */

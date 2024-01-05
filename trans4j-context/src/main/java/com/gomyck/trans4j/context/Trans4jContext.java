@@ -32,6 +32,17 @@ import org.springframework.lang.Nullable;
 
 import javax.sql.DataSource;
 
+/**
+ * trans4j context
+ *
+ * @author gomyck
+ * --------------------------------
+ * | qq: 474798383                 |
+ * | email: hao474798383@163.com   |
+ * --------------------------------
+ * @version [1.0.0]
+ * @since 2024/1/5
+ */
 @Configuration
 @AllArgsConstructor
 public class Trans4jContext {

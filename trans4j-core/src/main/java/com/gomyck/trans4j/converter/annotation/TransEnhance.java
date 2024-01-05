@@ -21,11 +21,15 @@ import com.gomyck.trans4j.support.ConverterType;
 import java.lang.annotation.*;
 
 /**
- * 消息增强
+ * 使用该注解可以对当前方法做转换增强处理
  *
- * @author 郝洋
- * @version [版本号, 2017年7月5日]
- * @since [产品/模块版本]
+ * @author gomyck
+ * --------------------------------
+ * | qq: 474798383                 |
+ * | email: hao474798383@163.com   |
+ * --------------------------------
+ * @version [1.0.0]
+ * @since 2017/7/5
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

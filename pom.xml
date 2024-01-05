@@ -68,7 +68,7 @@
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
-      <id>develop-dic-converter</id>
+      <id>develop-trans4j</id>
       <repositories>
         <repository>
           <id>sonatype-Release</id>

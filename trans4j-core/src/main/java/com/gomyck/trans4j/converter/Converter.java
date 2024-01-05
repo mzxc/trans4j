@@ -20,6 +20,12 @@ package com.gomyck.trans4j.converter;
  * 转换顶级接口
  *
  * @author gomyck
+ * --------------------------------
+ * | qq: 474798383                 |
+ * | email: hao474798383@163.com   |
+ * --------------------------------
+ * @version [1.0.0]
+ * @since 2022/2/7
  */
 public interface Converter {
 

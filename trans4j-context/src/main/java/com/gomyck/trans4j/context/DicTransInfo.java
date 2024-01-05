@@ -22,6 +22,17 @@ import com.gomyck.util.PropertyAppender;
 
 import java.util.Objects;
 
+/**
+ * 获取实体$V 属性的值
+ *
+ * @author gomyck
+ * --------------------------------
+ * | qq: 474798383                 |
+ * | email: hao474798383@163.com   |
+ * --------------------------------
+ * @version [1.0.0]
+ * @since 2024/1/5
+ */
 public class DicTransInfo {
 
   private DicTransInfo(){}
