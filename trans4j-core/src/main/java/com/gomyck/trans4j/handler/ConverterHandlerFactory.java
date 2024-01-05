@@ -1,5 +1,5 @@
 /*
- * Copyright [2023] [trans4j@gomyck.com]
+ * Copyright [2024] [trans4j@gomyck.com]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 package com.gomyck.trans4j.handler;
 
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
+public interface ConverterHandlerFactory<T extends ConverterHandler> {
 
-public interface ConverterHandlerFactory extends FactoryBean<ConverterHandler>, InitializingBean {
+  void refresh();
+
+  T getObject();
 
 }

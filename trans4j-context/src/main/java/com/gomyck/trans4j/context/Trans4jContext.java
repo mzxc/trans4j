@@ -18,7 +18,7 @@ package com.gomyck.trans4j.context;
 
 import com.gomyck.trans4j.filter.FilterComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
-import com.gomyck.trans4j.handler.ConverterHandlerFactory;
+import com.gomyck.trans4j.handler.dictionary.DicConverterHandler;
 import com.gomyck.trans4j.handler.dictionary.DicConverterInitConditional;
 import com.gomyck.trans4j.handler.dictionary.DicInfoConverterHandlerFactory;
 import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
@@ -58,13 +58,13 @@ public class Trans4jContext {
 
   @Bean
   @Conditional(DicConverterInitConditional.class)
-  public ConverterHandlerFactory initDicConverterHandlerFactory() {
+  public DicConverterHandler initDicConverterHandlerFactory() {
     DicInfoConverterHandlerFactory dicInfoConverterHandlerFactory = new DicInfoConverterHandlerFactory();
     dicInfoConverterHandlerFactory.setTrans4jProfiles(trans4jProfiles);
     dicInfoConverterHandlerFactory.setDataSource(dataSource);
     dicInfoConverterHandlerFactory.setConverterHandlerComposite(initHandlerComposite());
     if(autoEncoder != null) dicInfoConverterHandlerFactory.setAutoEncoder(autoEncoder);
-    return dicInfoConverterHandlerFactory;
+    return dicInfoConverterHandlerFactory.getObject();
   }
 
 }
