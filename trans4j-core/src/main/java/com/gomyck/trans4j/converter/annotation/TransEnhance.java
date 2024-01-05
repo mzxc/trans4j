@@ -38,6 +38,4 @@ public @interface TransEnhance {
 
   String i18nFlag() default "";
 
-  boolean originOverride() default false;
-
 }

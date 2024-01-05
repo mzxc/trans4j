@@ -25,6 +25,7 @@
 package com.gomyck.trans4j.converter.annotation;
 
 import com.gomyck.trans4j.cache.MemCache4ResultConvert;
+import com.gomyck.trans4j.support.ConverterType;
 import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.ObjectJudge;
 import lombok.AllArgsConstructor;
@@ -71,9 +72,16 @@ public class MVCMessageAdvice {
     }
     if (annotation.overTurn()) TransBus.overturn();
     if (ObjectJudge.notNull(annotation.i18nFlag())) TransBus.setI18nFlag(annotation.i18nFlag());
-    TransBus.setOriginFlag(annotation.originOverride());
     TransBus.convert(annotation.converterType());
-    return point.proceed();
+    Object proceed;
+    try {
+      proceed = point.proceed();
+    } catch (Exception e) {
+      TransBus.clearCurrentBusInfo();
+      throw e;
+    }finally {
+      if(!TransBus.getConvertType().contains(ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER)) TransBus.clearCurrentBusInfo();
+    }
+    return proceed;
   }
-
 }

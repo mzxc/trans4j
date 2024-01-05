@@ -195,25 +195,6 @@ public class TransBus {
   }
 
   /**
-   * 原值转换标识, true 则把原值替换
-   *
-   * @param originFlag 转换标识
-   */
-  public static void setOriginFlag(boolean originFlag) {
-    threadLocalSet(BusEnum.ORIGIN_FLAG, originFlag);
-  }
-
-  /**
-   * 把当前的 key 替换成翻译值, 用 key$K 来存储原值
-   *
-   * @return 是否使用原值替换
-   */
-  public static boolean getOriginFlag() {
-    Boolean originFlag = (Boolean) threadLocalGet(BusEnum.ORIGIN_FLAG);
-    return originFlag == null || originFlag;
-  }
-
-  /**
    * 清空
    */
   public static void clearCurrentBusInfo() {

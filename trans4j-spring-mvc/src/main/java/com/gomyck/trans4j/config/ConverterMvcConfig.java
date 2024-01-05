@@ -1,6 +1,6 @@
 
 /*
- * Copyright [2023] [trans4j@gomyck.com]
+ * Copyright [2024] [trans4j@gomyck.com]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 package com.gomyck.trans4j.config;
 
-import com.gomyck.trans4j.exception.RuntimeExceptionResolver;
+import com.gomyck.trans4j.exception.CompletionDispose;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -38,7 +38,7 @@ public class ConverterMvcConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(new RuntimeExceptionResolver());
+    registry.addInterceptor(new CompletionDispose());
   }
 
 }

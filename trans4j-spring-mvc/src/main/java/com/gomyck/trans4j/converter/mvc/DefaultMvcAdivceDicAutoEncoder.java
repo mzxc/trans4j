@@ -19,7 +19,6 @@ package com.gomyck.trans4j.converter.mvc;
 import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
 import com.gomyck.trans4j.support.ConverterType;
 import com.gomyck.trans4j.support.TransBus;
-import com.gomyck.util.serialize.CKJSON;
 
 public class DefaultMvcAdivceDicAutoEncoder implements AutoEncoder {
 
@@ -28,7 +27,8 @@ public class DefaultMvcAdivceDicAutoEncoder implements AutoEncoder {
     if(TransBus.getConvertType().contains(ConverterType.PERSISTENT_CONVERTER)) {
       return input;
     }
-    return CKJSON.getInstance().toJsonMap(input);
+    return input;
+    //return CKJSON.getInstance().toJsonMap(input);
   }
 
 }

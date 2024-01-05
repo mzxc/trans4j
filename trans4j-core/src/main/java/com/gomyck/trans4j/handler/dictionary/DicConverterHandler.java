@@ -26,6 +26,7 @@ import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.DataFilter;
 import com.gomyck.util.FieldUtil;
 import com.gomyck.util.ObjectJudge;
+import com.gomyck.util.PropertyAppender;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -190,20 +191,22 @@ public class DicConverterHandler extends AbstractConverterHandler {
   @Override
   public boolean support(final Object obj) {
     if (obj == null) return false;
-    if (obj instanceof Iterable) return true;
+    if (obj instanceof Collection) return true;
     if (obj instanceof Map) return true;
     return !FieldUtil.isBaseType(obj.getClass().getTypeName());
   }
 
   @Override
-  public Object handle(Object resultSet) {
-    super.handle(resultSet);
-    if (resultSet instanceof Map) {
-      this.convertDicColumnInfo4Map((Map<String, Object>) resultSet);
-    } else if (!FieldUtil.isBaseType(resultSet.getClass().getTypeName())) {
-      this.convertDicColumnInfo4Entity(resultSet);
+  public Object handle(Object object) {
+    if (Objects.isNull(object)) return null;
+    Object result = super.handle(object);
+    if(Objects.nonNull(result)) return result;
+    if (object instanceof Map) {
+      return this.convertDicColumnInfo4Map((Map<String, Object>) object);
+    } else if (!FieldUtil.isJDKClass(object)) {
+      return this.convertDicColumnInfo4Entity(object);
     }
-    return resultSet;
+    return null;
   }
 
   /**
@@ -211,15 +214,17 @@ public class DicConverterHandler extends AbstractConverterHandler {
    *
    * @param resultSet4row 结果集(一行)  key是列名称, value是列值
    */
-  private void convertDicColumnInfo4Map(Map<String, Object> resultSet4row) {
+  private Object convertDicColumnInfo4Map(Map<String, Object> resultSet4row) {
     boolean ifOverturn = TransBus.isOverturn();
-    boolean originFlag = TransBus.getOriginFlag();
     final Map<String, Map<String, Object>> _finalDicInfo = !ifOverturn ? DIC_INFO : DIC_INFO_OVERTURN;
     Map<String, Object> addInfo = new HashMap<>();
     resultSet4row.keySet().forEach(resultColName -> {
       // 获取结果集信息  开始递归
-      if (recursion(resultSet4row.get(resultColName))) return;
-
+      Object recursion = handle(resultSet4row.get(resultColName));
+      if (Objects.nonNull(recursion)) {
+        resultSet4row.put(resultColName, recursion);
+        return;
+      }
       // 字段名下划线转驼峰, 并大写, 与工具类统一格式
       String colName = ConverterUtil.getCommonColName(resultColName);
       Map<String, Object> usedDicInfo = _finalDicInfo.get(colName);
@@ -246,16 +251,10 @@ public class DicConverterHandler extends AbstractConverterHandler {
       convert_col_value = afterDicHandleInfo.getTargetValue();
       // 翻译后置拦截器============在翻译之后允许替换翻译值
 
-      if (originFlag) {
-        if (convert_col_value != null) {
-          resultSet4row.put(resultColName, convert_col_value); //不为空才做翻译处理, 否则返回原值
-          addInfo.put(resultColName.concat("$K"), colValue); //保留原值到新的字段
-        }
-      } else {
-        if (convert_col_value != null || ifMatchDic) addInfo.put(resultColName.concat("$V"), convert_col_value); //匹配了字典也要有这个字段, 因为前端可能会用
-      }
+      if (convert_col_value != null || ifMatchDic) addInfo.put(resultColName.concat("$V"), convert_col_value); //匹配了字典也要有这个字段, 因为前端可能会用
     });
     resultSet4row.putAll(addInfo);
+    return resultSet4row;
   }
 
   /**
@@ -263,17 +262,22 @@ public class DicConverterHandler extends AbstractConverterHandler {
    *
    * @param resultSet4Row 结果集(一行) field为列名, value为列值
    */
-  private void convertDicColumnInfo4Entity(Object resultSet4Row) {
+  private Object convertDicColumnInfo4Entity(Object resultSet4Row) {
     boolean ifOverturn = TransBus.isOverturn();
     final Map<String, Map<String, Object>> _finalDicInfo = !ifOverturn ? DIC_INFO : DIC_INFO_OVERTURN;
     List<Field> allFields = FieldUtil.getAllFields(resultSet4Row.getClass());
+    Map<String, Object> kv = new HashMap<>();
     allFields.forEach(field -> {
       try {
         // 获取结果集信息  开始递归
         Method getMethod4FieldValue = FieldUtil.getMethod(resultSet4Row.getClass(), field.getName());
+        Method setMethod4FieldValue = FieldUtil.setMethod(resultSet4Row.getClass(), field.getName());
         Object fieldValue = getMethod4FieldValue.invoke(resultSet4Row);
-        if (recursion(fieldValue)) return;
-
+        Object recursion = handle(fieldValue);
+        if (Objects.nonNull(recursion)) {
+          setMethod4FieldValue.invoke(resultSet4Row, recursion);
+          return;
+        }
         // 下划线转驼峰并大写, 与工具类统一格式
         String colName = ConverterUtil.getCommonColName(field.getName());
         Map<String, Object> usedDicInfo = _finalDicInfo.get(colName);
@@ -289,6 +293,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
 
         // 开始翻译
         Object convert_col_value = null;
+        boolean ifMatchDic = usedDicInfo != null;
         if (usedDicInfo != null) {
           convert_col_value = usedDicInfo.get(colValue);
         } else {
@@ -300,10 +305,22 @@ public class DicConverterHandler extends AbstractConverterHandler {
         convert_col_value = afterDicHandleInfo.getTargetValue();
         // 翻译后置拦截器============在翻译之后允许替换翻译值
 
-        if (convert_col_value != null) setMethod.invoke(resultSet4Row, convert_col_value);
+        if (convert_col_value != null || ifMatchDic) {
+          kv.put(field.getName().concat("$V"), convert_col_value);
+        }
+        //setMethod.invoke(resultSet4Row, convert_col_value);
       } catch (Exception ignored) {
       }
     });
+    if(kv.isEmpty()) return resultSet4Row;
+    Object generate;
+    try {
+      generate = PropertyAppender.generate(resultSet4Row, kv);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return resultSet4Row;
+    }
+    return generate;
   }
 
   private BeforeDicHandleInfo initBeforeConvertInfo(String commonName, Object originValue, Map<String, Object> usedDicInfo, Map<String, Map<String, Object>> overallDicInfo) {

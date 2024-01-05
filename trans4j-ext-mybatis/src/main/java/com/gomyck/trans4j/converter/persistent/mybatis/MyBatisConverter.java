@@ -21,12 +21,10 @@ import com.gomyck.trans4j.converter.Converter;
 import com.gomyck.trans4j.converter.persistent.ResultCollectionConverter;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
-import com.gomyck.trans4j.support.TransBus;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.*;
 
 import java.sql.Statement;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -46,14 +44,7 @@ public class MyBatisConverter extends ResultCollectionConverter implements Inter
 
   @Override
   public Object intercept(Invocation invocation) throws Throwable {
-    try {
-      List<Object> result = (List<Object>) invocation.proceed();
-      TransBus.setOriginFlag(true);
-      return doConvert(result);
-    } catch (Exception e) {
-      TransBus.clearCurrentBusInfo();
-      throw e;
-    }
+    return doConvert(invocation.proceed());
   }
 
   @Override

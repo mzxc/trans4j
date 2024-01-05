@@ -18,7 +18,9 @@ package com.gomyck.trans4j.handler;
 
 import lombok.AllArgsConstructor;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -54,19 +56,18 @@ public abstract class AbstractConverterHandler implements ConverterHandler {
 
   @Override
   public Object handle(Object object) {
-    if (Objects.isNull(object)) return object;
-    if (object instanceof Iterable) {
-      ((Iterable) object).forEach(this::handle);
+    if (object instanceof Collection) {
+      List<Object> finalRes = new ArrayList<>();
+      ((Collection) object).forEach(e -> {
+        finalRes.add(handle(e));
+      });
+      ((Collection) object).clear();
+      finalRes.forEach(e -> {
+        ((Collection) object).add(e);
+      });
+      return object;
     }
-    return object;
-  }
-
-  public boolean recursion(Object object) {
-    if (Objects.isNull(object) || object instanceof Map || object instanceof Iterable) {
-      this.handle(object);
-      return true;
-    }
-    return false;
+    return null;
   }
 
 }

@@ -1,6 +1,6 @@
 
 /*
- * Copyright [2023] [trans4j@gomyck.com]
+ * Copyright [2024] [trans4j@gomyck.com]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,9 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2021/6/16
  */
 @Slf4j
-public class RuntimeExceptionResolver implements HandlerInterceptor {
-
+public class CompletionDispose implements HandlerInterceptor {
   @Override
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
     TransBus.clearCurrentBusInfo();
   }
-
 }
