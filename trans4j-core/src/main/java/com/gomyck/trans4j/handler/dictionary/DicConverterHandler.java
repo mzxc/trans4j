@@ -148,7 +148,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
         if (ObjectJudge.isNull(code)) return;
         // 加入国际化
         if (ObjectJudge.notNull(adaptor.I18N)) {
-          code = code + DataFilter.toString(_dic.get(adaptor.I18N));
+          code = code + DataFilter.getFirstNotNull(DataFilter.toString(_dic.get(adaptor.I18N)), adaptor.DEFAULT_I18N_FLAG, "_INVALID");
         }
         Map<String, Object> maps = DIC_INFO.get(colName); // 获取以当前分类为键的map
         if (maps != null) {
@@ -310,8 +310,8 @@ public class DicConverterHandler extends AbstractConverterHandler {
           kv.put(field.getName().concat(V), convert_col_value);
         }
         //setMethod.invoke(resultSet4Row, convert_col_value);
-      } catch (Exception ignored) {
-        ignored.printStackTrace();
+      } catch (Exception e) {
+        log.error("Entity trans error: {}, fieldName: {}", e, field);
       }
     });
     if(kv.isEmpty()) return resultSet4Row;

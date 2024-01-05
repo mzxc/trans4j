@@ -76,10 +76,10 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory<D
   }
 
   private DicConverterHandler getDicConverterHandler(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig) {
-    final boolean ifOpenI18N = ObjectJudge.notNull(ckDicAdaptorConfig.getI18n());
+    final boolean ifOpenI18N = ObjectJudge.notNull(ckDicAdaptorConfig.getI18nColumnName());
     DicDescribeAdaptor initDicAdaptor;
     if (ifOpenI18N) {
-      initDicAdaptor = DicDescribeAdaptor.initAdaptor(ckDicAdaptorConfig.getCode(), ckDicAdaptorConfig.getValue(), ckDicAdaptorConfig.getColumnName(), ckDicAdaptorConfig.getI18n(), ckDicAdaptorConfig.getDefaultI18nFlag());
+      initDicAdaptor = DicDescribeAdaptor.initAdaptor(ckDicAdaptorConfig.getCode(), ckDicAdaptorConfig.getValue(), ckDicAdaptorConfig.getColumnName(), ckDicAdaptorConfig.getI18nColumnName(), ckDicAdaptorConfig.getDefaultI18nFlag());
     } else {
       initDicAdaptor = DicDescribeAdaptor.initAdaptor(ckDicAdaptorConfig.getCode(), ckDicAdaptorConfig.getValue(), ckDicAdaptorConfig.getColumnName());
     }

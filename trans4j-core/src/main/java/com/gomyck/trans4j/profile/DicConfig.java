@@ -60,11 +60,11 @@ public class DicConfig {
     /**
      * 国际化标识字段名称
      */
-    private String i18n;
+    private String i18nColumnName;
     /**
      * 默认的国际化标识 默认使用的标识代码: 比如 CN
      */
-    private String defaultI18nFlag;
+    private String defaultI18nFlag = "CN";
     /**
      * 初始化字典表信息sql
      */
