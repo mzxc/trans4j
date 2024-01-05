@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * @author gomyck
- */
 @Getter
 public class FilterComposite<B, A> implements OuterConverterFilter<B, A> {
 

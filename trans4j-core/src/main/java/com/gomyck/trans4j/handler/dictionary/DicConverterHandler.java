@@ -285,7 +285,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
 
         // 获取原值
         String colValue = DataFilter.toString(fieldValue);
-        Method setMethod = FieldUtil.setMethod(resultSet4Row.getClass(), field.getName(), fieldValue.getClass());
+        //Method setMethod = FieldUtil.setMethod(resultSet4Row.getClass(), field.getName(), fieldValue.getClass());
 
         // 翻译前置拦截器============在翻译之前允许替换字典
         final BeforeDicHandleInfo beforeDicHandleInfo = initBeforeConvertInfo(colName, colValue, usedDicInfo, _finalDicInfo);
@@ -311,6 +311,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
         }
         //setMethod.invoke(resultSet4Row, convert_col_value);
       } catch (Exception ignored) {
+        ignored.printStackTrace();
       }
     });
     if(kv.isEmpty()) return resultSet4Row;

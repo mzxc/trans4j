@@ -20,9 +20,6 @@ import lombok.AllArgsConstructor;
 
 import java.util.Objects;
 
-/**
- * @author gomyck
- */
 @AllArgsConstructor
 public abstract class AbstractConverterFilter<B, A> implements OuterConverterFilter<B, A> {
 

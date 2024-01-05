@@ -18,6 +18,7 @@ package com.gomyck.trans4j.handler;
 
 import lombok.AllArgsConstructor;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,14 +57,20 @@ public abstract class AbstractConverterHandler implements ConverterHandler {
 
   @Override
   public Object handle(Object object) {
+    if (object.getClass().isArray() && Array.getLength(object) > 0) {
+      for (int i = 0; i < Array.getLength(object); i++) {
+        Array.set(object, i, handle(Array.get(object, i)));;
+      }
+      return object;
+    }
     if (object instanceof Collection) {
       List<Object> finalRes = new ArrayList<>();
-      ((Collection) object).forEach(e -> {
+      ((Collection<?>) object).forEach(e -> {
         finalRes.add(handle(e));
       });
-      ((Collection) object).clear();
+      ((Collection<?>) object).clear();
       finalRes.forEach(e -> {
-        ((Collection) object).add(e);
+        ((Collection<Object>) object).add(e);
       });
       return object;
     }
