@@ -75,7 +75,9 @@ public class Trans4jContext {
     dicInfoConverterHandlerFactory.setDataSource(dataSource);
     dicInfoConverterHandlerFactory.setConverterHandlerComposite(initHandlerComposite());
     if(autoEncoder != null) dicInfoConverterHandlerFactory.setAutoEncoder(autoEncoder);
-    return dicInfoConverterHandlerFactory.getObject();
+    DicConverterHandler dicConverterHandler = dicInfoConverterHandlerFactory.getObject();
+    TransHolder.dicConverterHandler = dicConverterHandler;
+    return dicConverterHandler;
   }
 
 }
