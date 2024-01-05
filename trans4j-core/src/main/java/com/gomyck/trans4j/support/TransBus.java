@@ -19,8 +19,8 @@ package com.gomyck.trans4j.support;
 import com.gomyck.trans4j.filter.ConverterFilter;
 import com.gomyck.trans4j.filter.InnerConverterFilter;
 import com.gomyck.trans4j.handler.ConverterHandler;
-import com.gomyck.util.CkPage;
 import com.gomyck.util.ObjectJudge;
+import com.gomyck.util.parallel.TL;
 
 import java.util.*;
 
@@ -39,7 +39,7 @@ public class TransBus {
   /**
    * 转换器线程共享
    */
-  private static final ThreadLocal<Map<BusEnum, Object>> CONVERTER_SHARE_HOLDER = new ThreadLocal<>();
+  private static final TL CONVERTER_SHARE_HOLDER = TL.init("trans4j_bus_holder");
 
   /**
    * 转换
@@ -83,53 +83,6 @@ public class TransBus {
    */
   public static boolean isOverturn() {
     return threadLocalGet(BusEnum.CONVERT_OVERTURN_STATUS) != null;
-  }
-
-  /**
-   * 分页转换(有时存在查询异常, 导致紧挨着的查询被翻译)
-   *
-   * @param page  page
-   * @param limit limit
-   */
-  public static void convertWithPage(Long page, Long limit) {
-    CkPage.PageInfo pageInfo = new CkPage.PageInfo(page, limit);
-    convertWithPage(pageInfo);
-  }
-
-  /**
-   * 分页转换
-   *
-   * @param pageInfo pageInfo
-   */
-  public static void convertWithPage(CkPage.PageInfo pageInfo) {
-    convert();
-    threadLocalSet(BusEnum.CONVERT_WITH_PAGE_STATUS, true);
-    threadLocalSet(BusEnum.CONVERT_WITH_PAGE_INFO, pageInfo);
-  }
-
-  /**
-   * 是否携带分页
-   *
-   * @return 转换开关标识
-   */
-  public static boolean isWithPage() {
-    return threadLocalGet(BusEnum.CONVERT_WITH_PAGE_STATUS) != null;
-  }
-
-  /**
-   * 分页信息
-   *
-   * @return 分页信息
-   */
-  public static CkPage.PageInfo getPageInfo() {
-    return (CkPage.PageInfo) threadLocalGet(BusEnum.CONVERT_WITH_PAGE_INFO);
-  }
-
-  /**
-   * 清除分页翻译标识
-   */
-  public static void cleanPageInfo() {
-    if (isWithPage()) threadLocalSet(BusEnum.CONVERT_WITH_PAGE_STATUS, null);
   }
 
   /**
@@ -198,7 +151,7 @@ public class TransBus {
    * 清空
    */
   public static void clearCurrentBusInfo() {
-    CONVERTER_SHARE_HOLDER.remove();
+    CONVERTER_SHARE_HOLDER.clear();
   }
 
   /**
@@ -208,10 +161,7 @@ public class TransBus {
    * @param value value
    */
   private static void threadLocalSet(BusEnum key, Object value) {
-    if (CONVERTER_SHARE_HOLDER.get() == null) {
-      CONVERTER_SHARE_HOLDER.set(new HashMap<>());
-    }
-    CONVERTER_SHARE_HOLDER.get().put(key, value);
+    CONVERTER_SHARE_HOLDER.set(key, value);
   }
 
   /**
@@ -221,8 +171,7 @@ public class TransBus {
    * @return value
    */
   private static Object threadLocalGet(BusEnum key) {
-    if (CONVERTER_SHARE_HOLDER.get() == null) return null;
-    return CONVERTER_SHARE_HOLDER.get().get(key);
+    return CONVERTER_SHARE_HOLDER.get(key);
   }
 
 }

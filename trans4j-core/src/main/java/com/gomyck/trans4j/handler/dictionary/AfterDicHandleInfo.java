@@ -18,6 +18,7 @@ package com.gomyck.trans4j.handler.dictionary;
 
 import com.gomyck.trans4j.handler.AfterHandleInfo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -33,6 +34,7 @@ import java.util.function.Function;
  * @version [1.0.0]
  * @since 2022/9/2
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class AfterDicHandleInfo extends AfterHandleInfo {
 

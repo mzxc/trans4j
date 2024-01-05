@@ -18,6 +18,7 @@ package com.gomyck.trans4j.handler.dictionary;
 
 import com.gomyck.trans4j.handler.BeforeHandleInfo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import java.util.Map;
  * @version [1.0.0]
  * @since 2022/9/2
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class BeforeDicHandleInfo extends BeforeHandleInfo {
 
