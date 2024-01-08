@@ -36,7 +36,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface TransEnhance {
 
-  ConverterType[] converterType() default {ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER};
+  ConverterType[] converterType() default {};
 
   boolean overTurn() default false;
 

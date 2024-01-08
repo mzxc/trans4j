@@ -16,26 +16,22 @@
 
 package com.gomyck.trans4j;
 
-import com.gomyck.trans4j.converter.mvc.ResponseBodyAdviceConverter;
-import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.selector.MyBatisExtImportSelector;
+import com.gomyck.trans4j.selector.SpringMvcExtImportSelector;
 import com.gomyck.trans4j.selector.Trans4JCoreImportSelector;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import javax.sql.DataSource;
 
 @Configuration
 @AutoConfigureAfter(DataSource.class)
-@ComponentScan(basePackages = {"com.gomyck.trans4j"}, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ResponseBodyAdviceConverter.class)})
-@Import({Trans4JCoreImportSelector.class, MyBatisExtImportSelector.class})
-public class Trans4JConfiguration {
-
-  @Bean
-  @ConditionalOnProperty(value = ResponseBodyAdviceConverter.RESPONSE_ADVICE_CONFIG_VALUE, havingValue = "true", matchIfMissing = true)
-  public ResponseBodyAdviceConverter initResponseBodyAdviceConverter(ConverterHandlerComposite converterHandlerComposite) {
-    return new ResponseBodyAdviceConverter(converterHandlerComposite);
-  }
-
-}
+@ComponentScan(basePackages = {"com.gomyck.trans4j"})
+@Import({
+  Trans4JCoreImportSelector.class,
+  SpringMvcExtImportSelector.class,
+  MyBatisExtImportSelector.class
+})
+public class Trans4JConfiguration {}

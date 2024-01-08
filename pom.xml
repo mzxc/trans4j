@@ -48,7 +48,7 @@
       </dependency>
       <dependency>
         <groupId>com.gomyck</groupId>
-        <artifactId>trans4j-spring-mvc</artifactId>
+        <artifactId>trans4j-ext-spring-mvc</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
@@ -58,7 +58,7 @@
     <module>trans4j-spring-boot-starter</module>
     <module>trans4j-core</module>
     <module>trans4j-context</module>
-    <module>trans4j-spring-mvc</module>
+    <module>trans4j-ext-spring-mvc</module>
     <module>trans4j-ext-mybatis</module>
     <module>trans4j-ext-rest-api</module>
   </modules>

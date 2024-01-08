@@ -40,11 +40,6 @@ public class Trans4JProfiles {
   private String ignoreSuffix = "_DC";
 
   /**
-   * 消息增强(默认为 true)
-   */
-  private boolean messageAdvice = true;
-
-  /**
    * dic 转换器配置
    */
   private DicConfig dic = new DicConfig();

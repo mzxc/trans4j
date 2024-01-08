@@ -18,15 +18,16 @@ package com.gomyck.trans4j.context;
 
 import com.gomyck.trans4j.filter.FilterComposite;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
-import com.gomyck.trans4j.handler.dictionary.DicConverterHandler;
 import com.gomyck.trans4j.handler.dictionary.DicConverterInitConditional;
 import com.gomyck.trans4j.handler.dictionary.DicInfoConverterHandlerFactory;
 import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.Nullable;
 
@@ -45,7 +46,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @AllArgsConstructor
-public class Trans4jContext {
+public class Trans4jContext implements ApplicationListener<ContextRefreshedEvent> {
 
   private Trans4JProfiles trans4jProfiles;
 
@@ -69,15 +70,18 @@ public class Trans4jContext {
 
   @Bean
   @Conditional(DicConverterInitConditional.class)
-  public DicConverterHandler initDicConverterHandlerFactory() {
+  public DicInfoConverterHandlerFactory initDicConverterHandlerFactory() {
     DicInfoConverterHandlerFactory dicInfoConverterHandlerFactory = new DicInfoConverterHandlerFactory();
     dicInfoConverterHandlerFactory.setTrans4jProfiles(trans4jProfiles);
     dicInfoConverterHandlerFactory.setDataSource(dataSource);
     dicInfoConverterHandlerFactory.setConverterHandlerComposite(initHandlerComposite());
     if(autoEncoder != null) dicInfoConverterHandlerFactory.setAutoEncoder(autoEncoder);
-    DicConverterHandler dicConverterHandler = dicInfoConverterHandlerFactory.getObject();
-    TransHolder.dicConverterHandler = dicConverterHandler;
-    return dicConverterHandler;
+    return dicInfoConverterHandlerFactory;
+  }
+
+  @Override
+  public void onApplicationEvent(ContextRefreshedEvent event) {
+    TransHolder.dicConverterHandler = initDicConverterHandlerFactory().getObject();
   }
 
 }

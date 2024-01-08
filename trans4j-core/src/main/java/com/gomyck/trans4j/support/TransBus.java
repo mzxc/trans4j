@@ -36,6 +36,9 @@ import java.util.*;
  * @since 2022/12/12
  */
 public class TransBus {
+
+  public static ConverterType[] DEFAULT_CONVERTER_TYPE = new ConverterType[]{ConverterType.SIMPLE_DEFAULT_CONVERTER};
+
   /**
    * 转换器线程共享
    */

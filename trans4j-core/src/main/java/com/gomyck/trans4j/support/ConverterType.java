@@ -29,6 +29,7 @@ package com.gomyck.trans4j.support;
  * @since 2022/2/8 15:56
  */
 public enum ConverterType {
+  SIMPLE_DEFAULT_CONVERTER,
   PERSISTENT_CONVERTER,
   RESPONSE_MESSAGE_ENHANCE_CONVERTER
 }

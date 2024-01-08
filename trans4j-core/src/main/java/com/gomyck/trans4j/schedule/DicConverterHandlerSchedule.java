@@ -19,10 +19,9 @@ package com.gomyck.trans4j.schedule;
 import com.gomyck.trans4j.handler.dictionary.DicConverterHandler;
 import com.gomyck.trans4j.handler.dictionary.DicConverterInitConditional;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -42,14 +41,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @EnableScheduling
+@AllArgsConstructor
 @Conditional(DicConverterInitConditional.class)
 public class DicConverterHandlerSchedule implements SchedulingConfigurer {
 
-  @Autowired
   private Trans4JProfiles trans4jProfiles;
 
-  @Lazy
-  @Autowired
   private DicConverterHandler dicConverterHandler;
 
   @Override
@@ -69,3 +66,4 @@ public class DicConverterHandlerSchedule implements SchedulingConfigurer {
     }, cron);
   }
 }
+

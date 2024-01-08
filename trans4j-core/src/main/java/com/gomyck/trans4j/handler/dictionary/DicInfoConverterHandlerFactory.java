@@ -17,8 +17,8 @@
 package com.gomyck.trans4j.handler.dictionary;
 
 import com.gomyck.trans4j.filter.dictionary.DicI18NFilter;
+import com.gomyck.trans4j.handler.AbstractConverterHandlerFactory;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
-import com.gomyck.trans4j.handler.ConverterHandlerFactory;
 import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
 import com.gomyck.trans4j.profile.DicConfig;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory<DicConverterHandler> {
+public class DicInfoConverterHandlerFactory extends AbstractConverterHandlerFactory<DicConverterHandler> {
 
   @Setter
   private Trans4JProfiles trans4jProfiles;
@@ -56,23 +56,15 @@ public class DicInfoConverterHandlerFactory implements ConverterHandlerFactory<D
 
   private boolean fileExist = true;
 
-  private DicConverterHandler dicConverterHandler;
-
   @Override
-  public DicConverterHandler getObject() {
-    refresh();
-    return dicConverterHandler;
-  }
-
-  @Override
-  public void refresh() {
+  public void init() {
     DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig = trans4jProfiles.getDic().getAdaptor();
     final DicConverterHandler dicConverterHandler = getDicConverterHandler(ckDicAdaptorConfig);
     initHandlerByDatabase(ckDicAdaptorConfig, dicConverterHandler);
     initHandlerByRestServer(ckDicAdaptorConfig, dicConverterHandler);
     initHandlerByFile(ckDicAdaptorConfig, dicConverterHandler);
     dicConverterHandler.refresh();
-    this.dicConverterHandler = dicConverterHandler;
+    this.object = dicConverterHandler;
   }
 
   private DicConverterHandler getDicConverterHandler(DicConfig.CkDicAdaptorConfig ckDicAdaptorConfig) {

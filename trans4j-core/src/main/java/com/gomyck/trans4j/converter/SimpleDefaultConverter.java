@@ -1,5 +1,5 @@
 /*
- * Copyright [2023] [trans4j@gomyck.com]
+ * Copyright [2024] [trans4j@gomyck.com]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,25 @@
 
 package com.gomyck.trans4j.converter;
 
-/**
- * 转换顶级接口
- *
- * @author gomyck
- * --------------------------------
- * | qq: 474798383                 |
- * | email: hao474798383@163.com   |
- * --------------------------------
- * @version [1.0.0]
- * @since 2022/2/7
- */
-public interface Converter {
+import com.gomyck.trans4j.handler.ConverterHandlerComposite;
+import com.gomyck.trans4j.support.ConverterType;
+import com.gomyck.trans4j.support.TransBus;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public class SimpleDefaultConverter implements Converter {
 
   /**
-   * 数据转换
-   *
-   * @param object 数据集
-   * @return Object 转译后的实体
+   * 处理器集合
    */
-  Object doConvert(Object object);
+  private ConverterHandlerComposite converterHandlerComposite;
+
+  @Override
+  public Object doConvert(Object object) {
+    if(TransBus.getConvertType().contains(ConverterType.SIMPLE_DEFAULT_CONVERTER)) {
+      return converterHandlerComposite.handle(object);
+    }
+    return object;
+  }
 
 }

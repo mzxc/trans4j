@@ -19,7 +19,6 @@ package com.gomyck.trans4j.converter.mvc;
 
 import com.gomyck.trans4j.converter.Converter;
 import com.gomyck.trans4j.handler.ConverterHandlerComposite;
-import com.gomyck.trans4j.profile.Trans4JProfiles;
 import com.gomyck.trans4j.support.ConverterType;
 import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.log.logger.CkLogger;
@@ -52,11 +51,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @AllArgsConstructor
 public class ResponseBodyAdviceConverter implements Converter, ResponseBodyAdvice<Object> {
 
-  public static final String RESPONSE_ADVICE_CONFIG_VALUE = Trans4JProfiles.CONVERTER_PREFIX + ".message-advice";
-
-  /**
-   * 处理器集合
-   */
   private ConverterHandlerComposite converterHandlerComposite;
 
   @Override

@@ -25,6 +25,7 @@
 package com.gomyck.trans4j.converter.annotation;
 
 import com.gomyck.trans4j.cache.MemCache4ResultConvert;
+import com.gomyck.trans4j.converter.SimpleDefaultConverter;
 import com.gomyck.trans4j.support.ConverterType;
 import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.ObjectJudge;
@@ -57,7 +58,9 @@ import java.text.MessageFormat;
 @Component("MVCMessageAdvice-origin")
 public class MVCMessageAdvice {
 
-  MemCache4ResultConvert memCache4ResultConvert;
+  private MemCache4ResultConvert memCache4ResultConvert;
+
+  private SimpleDefaultConverter simpleDefaultConverter;
 
   @Pointcut("@annotation(com.gomyck.trans4j.converter.annotation.TransEnhance)")
   public void pointCut() {}
@@ -76,14 +79,15 @@ public class MVCMessageAdvice {
     }
     if (annotation.overTurn()) TransBus.overturn();
     if (ObjectJudge.notNull(annotation.i18nFlag())) TransBus.setI18nFlag(annotation.i18nFlag());
-    TransBus.convert(annotation.converterType());
+    TransBus.convert(annotation.converterType().length == 0 ? TransBus.DEFAULT_CONVERTER_TYPE : annotation.converterType());
     Object proceed;
     try {
-      proceed = point.proceed();
+      proceed = simpleDefaultConverter.doConvert(point.proceed());
     } catch (Exception e) {
       TransBus.clearCurrentBusInfo();
       throw e;
     }finally {
+      // response advice use itself clean method, because it use TransBus on this pointcut call over!
       if(!TransBus.getConvertType().contains(ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER)) TransBus.clearCurrentBusInfo();
     }
     return proceed;

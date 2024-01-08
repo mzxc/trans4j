@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-package com.gomyck.trans4j.handler;
+package com.gomyck.trans4j.converter.mvc;
 
-import org.springframework.beans.factory.FactoryBean;
+import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
+import com.gomyck.trans4j.support.ConverterType;
+import com.gomyck.trans4j.support.TransBus;
+import com.gomyck.util.serialize.CKJSON;
 
-public interface ConverterHandlerFactory<T extends ConverterHandler> extends FactoryBean<T> {
+public class DefaultMvcAdivceDicAutoEncoder implements AutoEncoder {
+
+  @Override
+  public Object encode(Object input) {
+    if(!TransBus.getConvertType().contains(ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER)) {
+      return input;
+    }
+    return CKJSON.getInstance().toJsonMap(input);
+  }
 
 }

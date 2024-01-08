@@ -16,6 +16,8 @@
 
 package com.gomyck.trans4j.selector;
 
+import com.gomyck.trans4j.converter.SimpleDefaultConverter;
+import com.gomyck.trans4j.handler.ConverterHandlerComposite;
 import com.gomyck.trans4j.profile.DicConfig;
 import com.gomyck.trans4j.profile.SecureConfig;
 import com.gomyck.trans4j.profile.Trans4JProfiles;
@@ -50,4 +52,10 @@ public class Trans4JCoreImportSelector implements ImportSelector {
   public String[] selectImports(AnnotationMetadata importingClassMetadata) {
     return new String[0];
   }
+
+  @Bean
+  public SimpleDefaultConverter initSimpleDefaultConverter(ConverterHandlerComposite converterHandlerComposite) {
+    return new SimpleDefaultConverter(converterHandlerComposite);
+  }
+
 }
