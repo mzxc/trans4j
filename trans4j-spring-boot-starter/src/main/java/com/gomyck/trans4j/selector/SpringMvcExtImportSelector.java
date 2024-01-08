@@ -30,8 +30,8 @@ public class SpringMvcExtImportSelector implements ImportSelector {
     try {
       Class.forName("com.gomyck.trans4j.converter.mvc.ResponseBodyAdviceConverter");
       log.info("Trans4j auto config ext: spring-mvc");
-      log.info("default ConverterType is : RESPONSE_MESSAGE_ENHANCE_CONVERTER");
-      TransBus.DEFAULT_CONVERTER_TYPE = new ConverterType[]{ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER};
+      log.info("default ConverterType is : RESPONSE_BODY_ADVICE_CONVERTER");
+      TransBus.DEFAULT_CONVERTER_TYPE = new ConverterType[]{ConverterType.RESPONSE_BODY_ADVICE_CONVERTER};
       return new String[]{};
       //"com.gomyck.trans4j.converter.mvc.ResponseBodyAdviceConverter"
     } catch (ClassNotFoundException e) {

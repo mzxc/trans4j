@@ -53,7 +53,7 @@ public abstract class ResultCollectionConverter implements Converter {
 
   @Override
   public Object doConvert(Object result) {
-    if (!TransBus.getConvertType().contains(ConverterType.PERSISTENT_CONVERTER)) return result;
+    if (!TransBus.getConvertType().contains(ConverterType.JDBC_PERSISTENT_CONVERTER)) return result;
     StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
     for (StackTraceElement stackTraceElement : stackTrace) {
       if (stackTraceElement.getMethodName().toUpperCase().contains(trans4jProfiles.getIgnoreSuffix())) return result;

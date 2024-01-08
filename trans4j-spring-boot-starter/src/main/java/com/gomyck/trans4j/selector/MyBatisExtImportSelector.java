@@ -31,8 +31,8 @@ public class MyBatisExtImportSelector implements ImportSelector {
       Class.forName("org.apache.ibatis.executor.resultset.ResultSetHandler");
       Class.forName("com.gomyck.trans4j.converter.persistent.mybatis.MyBatisConverter");
       log.info("Trans4j auto config ext: mybatis");
-      log.info("default ConverterType is : PERSISTENT_CONVERTER");
-      TransBus.DEFAULT_CONVERTER_TYPE = new ConverterType[]{ConverterType.PERSISTENT_CONVERTER};
+      log.info("default ConverterType is : JDBC_PERSISTENT_CONVERTER");
+      TransBus.DEFAULT_CONVERTER_TYPE = new ConverterType[]{ConverterType.JDBC_PERSISTENT_CONVERTER};
       return new String[]{"com.gomyck.trans4j.converter.persistent.mybatis.MyBatisConverter"};
     } catch (ClassNotFoundException e) {
       return new String[]{};

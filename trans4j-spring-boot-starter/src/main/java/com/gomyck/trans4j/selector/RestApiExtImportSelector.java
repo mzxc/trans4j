@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package com.gomyck.trans4j.converter.mvc;
+package com.gomyck.trans4j.selector;
 
-import com.gomyck.trans4j.handler.dictionary.serialize.AutoEncoder;
-import com.gomyck.trans4j.support.ConverterType;
-import com.gomyck.trans4j.support.TransBus;
-import com.gomyck.util.serialize.CKJSON;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ImportSelector;
+import org.springframework.core.type.AnnotationMetadata;
 
-public class DefaultMvcAdivceDicAutoEncoder implements AutoEncoder {
+@Slf4j
+public class RestApiExtImportSelector implements ImportSelector {
 
   @Override
-  public Object encode(Object input) {
-    if(!TransBus.getConvertType().contains(ConverterType.RESPONSE_BODY_ADVICE_CONVERTER)) {
-      return input;
+  public String[] selectImports(AnnotationMetadata importingClassMetadata) {
+    try {
+      Class.forName("com.gomyck.trans4j.converter.rest.RestConverter");
+      log.info("Trans4j auto config ext: rest-api");
+      return new String[]{};
+    } catch (ClassNotFoundException e) {
+      return new String[]{};
     }
-    return CKJSON.getInstance().toJsonMap(input);
   }
 
 }

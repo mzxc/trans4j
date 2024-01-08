@@ -17,6 +17,7 @@
 package com.gomyck.trans4j;
 
 import com.gomyck.trans4j.selector.MyBatisExtImportSelector;
+import com.gomyck.trans4j.selector.RestApiExtImportSelector;
 import com.gomyck.trans4j.selector.SpringMvcExtImportSelector;
 import com.gomyck.trans4j.selector.Trans4JCoreImportSelector;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -31,6 +32,7 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = {"com.gomyck.trans4j"})
 @Import({
   Trans4JCoreImportSelector.class,
+  RestApiExtImportSelector.class,
   SpringMvcExtImportSelector.class,
   MyBatisExtImportSelector.class
 })

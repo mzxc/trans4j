@@ -66,7 +66,7 @@ public class ResponseBodyAdviceConverter implements Converter, ResponseBodyAdvic
   @Override
   public Object doConvert(Object result) {
     try {
-      if (TransBus.getConvertType().contains(ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER)) {
+      if (TransBus.getConvertType().contains(ConverterType.RESPONSE_BODY_ADVICE_CONVERTER)) {
         result = converterHandlerComposite.handle(result);
       }
     } catch (Exception e) {

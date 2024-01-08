@@ -44,7 +44,7 @@ public class DicTransInfo {
     try {
       return PropertyAppender.getValue(obj, fieldName.concat(DicConverterHandler.V));
     } catch (Exception e) {
-      throw new TransInfoNotFoundException("Entity not found fieldName: " + fieldName + ", Please insure TransEnhance annotation ConverterType is [PERSISTENT_CONVERTER] OR Insure fieldName is dictionary");
+      throw new TransInfoNotFoundException("Entity not found fieldName: " + fieldName + ", Please insure TransEnhance annotation ConverterType is [JDBC_PERSISTENT_CONVERTER] OR Insure fieldName is dictionary");
     }
 
   }

@@ -46,13 +46,6 @@ public class TransBus {
 
   /**
    * 转换
-   */
-  public static void convert() {
-    convert(ConverterType.PERSISTENT_CONVERTER);
-  }
-
-  /**
-   * 转换
    *
    * @param converterType 转换类型
    */

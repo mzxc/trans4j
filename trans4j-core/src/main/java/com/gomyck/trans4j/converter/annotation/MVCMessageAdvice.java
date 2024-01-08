@@ -88,7 +88,7 @@ public class MVCMessageAdvice {
       throw e;
     }finally {
       // response advice use itself clean method, because it use TransBus on this pointcut call over!
-      if(!TransBus.getConvertType().contains(ConverterType.RESPONSE_MESSAGE_ENHANCE_CONVERTER)) TransBus.clearCurrentBusInfo();
+      if(!TransBus.getConvertType().contains(ConverterType.RESPONSE_BODY_ADVICE_CONVERTER)) TransBus.clearCurrentBusInfo();
     }
     return proceed;
   }
