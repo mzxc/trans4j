@@ -252,7 +252,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
       convert_col_value = afterDicHandleInfo.getTargetValue();
       // 翻译后置拦截器============在翻译之后允许替换翻译值
 
-      if (convert_col_value != null || ifMatchDic) addInfo.put(resultColName.concat(V), convert_col_value); //匹配了字典也要有这个字段, 因为前端可能会用
+      if (convert_col_value != null) addInfo.put(resultColName.concat(V), convert_col_value);
     });
     resultSet4row.putAll(addInfo);
     return resultSet4row;
@@ -306,9 +306,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
         convert_col_value = afterDicHandleInfo.getTargetValue();
         // 翻译后置拦截器============在翻译之后允许替换翻译值
 
-        if (convert_col_value != null || ifMatchDic) {
-          kv.put(field.getName().concat(V), convert_col_value);
-        }
+        if (convert_col_value != null) kv.put(field.getName().concat(V), convert_col_value);
         //setMethod.invoke(resultSet4Row, convert_col_value);
       } catch (Exception e) {
         log.error("Entity trans error: {}, fieldName: {}", e, field);
