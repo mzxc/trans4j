@@ -1,3 +1,7 @@
+# 文档地址
+
+[https://gomyck.github.io/trans4j/](https://gomyck.github.io/trans4j/)
+
 # 序言
 
 **Trans4J 的`使命`: 减少无用 SQL 编写, 减少无用数据结构设计, 减少循环调用, 新手`10分钟`快速入门**
