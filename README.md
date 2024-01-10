@@ -4,11 +4,13 @@ Trans4J 2.0.3-RELEASE 版本于 2024/01/10 上传至 maven 公服, 小伙伴配�
 
 或配置镜像地址(setting.xml):
 
+```xml
 <mirror>
   <id>sonatype-Release</id>
   <url>https://oss.sonatype.org/content/repositories/releases/</url>
   <mirrorOf>central</mirrorOf>
 </mirror>
+```
 
 # 文档地址
 
