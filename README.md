@@ -1,6 +1,6 @@
 # 文档地址
 
-[https://gomyck.github.io/trans4j/](https://gomyck.github.io/trans4j/)
+[https://trans4j.gomyck.com](https://trans4j.gomyck.com)
 
 # 序言
 
