@@ -1,3 +1,9 @@
+# 快速体验
+
+Clone下面的仓库  本地运行即可快速体验 Trans4J:
+
+https://gitee.com/mzxc_admin/trans4j-test
+
 # Maven 依赖不能下载说明
 
 Trans4J 2.0.3-RELEASE 版本于 2024/01/10 上传至 maven 公服, 小伙伴配置国内阿里云镜像加速的, 可能需要等 24 小时之后, 阿里云同步 index 即可下载
