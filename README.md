@@ -1,3 +1,15 @@
+# Maven 依赖不能下载说明
+
+Trans4J 2.0.3-RELEASE 版本于 2024/01/10 上传至 maven 公服, 小伙伴配置国内阿里云镜像加速的, 可能需要等 24 小时之后, 阿里云同步 index 即可下载
+
+或配置镜像地址(setting.xml):
+
+<mirror>
+  <id>sonatype-Release</id>
+  <url>https://oss.sonatype.org/content/repositories/releases/</url>
+  <mirrorOf>central</mirrorOf>
+</mirror>
+
 # 文档地址
 
 [https://trans4j.gomyck.com](https://trans4j.gomyck.com)
