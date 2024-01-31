@@ -18,7 +18,7 @@ package com.gomyck.trans4j.context;
 
 import com.gomyck.trans4j.exception.TransInfoNotFoundException;
 import com.gomyck.trans4j.handler.dictionary.DicConverterHandler;
-import com.gomyck.util.PropertyAppender;
+import com.gomyck.util.PropertyManage;
 
 import java.util.Objects;
 
@@ -42,7 +42,7 @@ public class DicTransInfo {
       return null;
     }
     try {
-      return PropertyAppender.getValue(obj, fieldName.concat(DicConverterHandler.V));
+      return PropertyManage.getValue(obj, fieldName.concat(DicConverterHandler.V));
     } catch (Exception e) {
       throw new TransInfoNotFoundException("Entity not found fieldName: " + fieldName + ", Please insure TransEnhance annotation ConverterType is [JDBC_PERSISTENT_CONVERTER] OR Insure fieldName is dictionary");
     }

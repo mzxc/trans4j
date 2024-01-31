@@ -26,7 +26,7 @@ import com.gomyck.trans4j.support.TransBus;
 import com.gomyck.util.DataFilter;
 import com.gomyck.util.FieldUtil;
 import com.gomyck.util.ObjectJudge;
-import com.gomyck.util.PropertyAppender;
+import com.gomyck.util.PropertyManage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -315,7 +315,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
     if(kv.isEmpty()) return resultSet4Row;
     Object generate;
     try {
-      generate = PropertyAppender.generate(resultSet4Row, kv);
+      generate = PropertyManage.generate(resultSet4Row, kv);
     } catch (Exception e) {
       e.printStackTrace();
       return resultSet4Row;
