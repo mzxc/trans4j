@@ -105,7 +105,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
     final Map<String, Map<String, Object>> _finalDicInfo = !ifOverturn ? DIC_INFO : DIC_INFO_OVERTURN;
     String colName = ConverterUtil.getCommonColName(typeCode);
     Map<String, Object> usedDicInfo = _finalDicInfo.get(colName);
-    return DataFilter.toString(usedDicInfo.get(originValue));
+    return DataFilter.toString(usedDicInfo.get(originValue+DataFilter.getFirstNotNull(TransBus.getI18nFlag(), adaptor.getDEFAULT_I18N_FLAG())));
   }
 
   /**

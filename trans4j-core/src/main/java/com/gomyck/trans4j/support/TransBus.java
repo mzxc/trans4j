@@ -96,7 +96,7 @@ public class TransBus {
    * @return 标识
    */
   public static String getI18nFlag() {
-    return threadLocalGet(BusEnum.I18N_FLAG) == null ? null : Objects.requireNonNull(threadLocalGet(BusEnum.I18N_FLAG)).toString();
+    return threadLocalGet(BusEnum.I18N_FLAG) == null ? "" : Objects.requireNonNull(threadLocalGet(BusEnum.I18N_FLAG)).toString();
   }
 
   /**
