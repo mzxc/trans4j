@@ -114,7 +114,7 @@ public class DicConverterHandler extends AbstractConverterHandler {
    * @param initDicInfoFunc 初始化方法
    */
   public void init(Function<Object, List<Map<String, Object>>> initDicInfoFunc) {
-    log.info("Initializing gomyck result converter dic info ...");
+    log.debug("Initializing gomyck result converter dic info ...");
     if (!this.initDicInfoFunc.contains(initDicInfoFunc)) this.initDicInfoFunc.add(initDicInfoFunc);
     if (initDicInfoFunc == null) return;
     List<Map<String, Object>> _dicInfo = initDicInfoFunc.apply(this);
