@@ -31,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -133,7 +132,7 @@ public class DicInfoConverterHandlerFactory extends AbstractConverterHandlerFact
           List<Map<String, Object>> result = CKJSON.getInstance().parseListMap(s);
           log.info(MessageFormat.format("init dic info with url: {0}, result size is: {1}", url, result.size()));
           dicInfo.addAll(result);
-        } catch (IOException e) {
+        } catch (Exception e) {
           throw new RuntimeException(MessageFormat.format("init dic info error, url is: {0}, error is: {1}", url, e));
         }
       });

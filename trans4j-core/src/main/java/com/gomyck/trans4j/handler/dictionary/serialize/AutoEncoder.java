@@ -16,6 +16,9 @@
 
 package com.gomyck.trans4j.handler.dictionary.serialize;
 
+/**
+ * 翻译的前置动作, 将原始数据进行一次清洗后, 才进行翻译动作
+ */
 public interface AutoEncoder {
 
   Object encode(Object input);
